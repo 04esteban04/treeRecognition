@@ -2,8 +2,10 @@ import pytest
 import torch
 import os
 import cv2
-from src.preprocessing import preprocessImage
-from src.reconstruction import (
+import numpy as np 
+
+from preprocessing.preprocess import preprocessImage
+from reconstruction.reconstruct import (
     denormalizeTensor, 
     tensorToNumpyImage, 
     resizeImageToOriginal, 
@@ -11,7 +13,11 @@ from src.reconstruction import (
     saveImage, 
     reconstructImage)
 
-sampleImage = os.path.join('assets', 'test_image.jpeg')
+@pytest.fixture
+def sampleImage():
+    current_dir = os.path.dirname(__file__)
+    sampleImage = os.path.join(current_dir, "..", "assets", "test_image.jpg")
+    return os.path.abspath(sampleImage)
 
 def test_denormalizeTensor(sampleImage):
     tensor_img, _ = preprocessImage(sampleImage)
@@ -48,8 +54,8 @@ def test_saveImage(sampleImage):
     img_np = tensorToNumpyImage(img_denorm)
     img_resized = resizeImageToOriginal(img_np, original_size)
     img_bgr = convertRgbToBgr(img_resized)
-    saveImage(img_bgr, filename="test_output.png")
-    assert cv2.imread("test_output.png") is not None
+    success = saveImage(img_bgr, filename="test_output.png")
+    assert success, "La imagen no se pudo guardar"
 
 def test_reconstructImage(sampleImage):
     tensor_img, original_size = preprocessImage(sampleImage)

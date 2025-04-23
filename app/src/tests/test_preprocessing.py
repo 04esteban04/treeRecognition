@@ -3,7 +3,7 @@ import torch
 import cv2
 import os
 
-from src.preprocessing import (
+from preprocessing.preprocess import (
     preprocessImage, 
     loadImage,
     convertBgrToRgb, 
@@ -12,7 +12,9 @@ from src.preprocessing import (
 
 @pytest.fixture
 def sampleImage():
-    return os.path.join('assets', 'test_image.jpeg')
+    current_dir = os.path.dirname(__file__)
+    sampleImage = os.path.join(current_dir, "..", "assets", "test_image.jpg")
+    return os.path.abspath(sampleImage)
     
 def test_loadImage(sampleImage):
     img = loadImage(sampleImage)
