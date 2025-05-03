@@ -1,7 +1,7 @@
 PYTHON=python
 PYTEST=pytest
 SRC_DIR=src
-TESTS_DIR=app/src/tests
+TESTS_DIR=app/preprocessing/src/tests
 ASSETS_DIR=assets
 
 .PHONY: test clean
@@ -18,10 +18,10 @@ clean:
 	find . -name "*.pyc" -exec rm -f {} +
 
 	# Eliminar carpeta 'output'
-	rm -rf app/src/output
+	rm -rf app/preprocessing/src/output
 
 	# Eliminar archivos de cache de pytest
 	find . -type d -name ".pytest_cache" -exec rm -rf {} + || true
 
 	# Eliminar .pytest_cache en la ruta app/src directamente
-	rm -rf app/src/.pytest_cache || true
+	rm -rf app/preprocessing/src/.pytest_cache || true
