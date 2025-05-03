@@ -1,0 +1,6 @@
+Idx,Real value,Predicted,Prob (%),Is prediction correct?
+2,arce (Aceraceae),roble (quercus),44.3,❌
+8,arce (Aceraceae),roble (quercus),34.4,❌
+10,cedro (cedrus deodara),pino (pinaceae),62.4,❌
+19,cedro (cedrus deodara),pino (pinaceae),61.4,❌
+22,eucalipto (eucalyptus globulus),roble (quercus),62.3,❌

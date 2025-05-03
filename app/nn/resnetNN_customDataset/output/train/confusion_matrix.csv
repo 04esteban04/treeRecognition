@@ -1,0 +1,6 @@
+,arce (Aceraceae),cedro (cedrus deodara),eucalipto (eucalyptus globulus),pino (pinaceae),roble (quercus)
+arce (Aceraceae),8,0,0,0,2
+cedro (cedrus deodara),0,8,0,2,0
+eucalipto (eucalyptus globulus),0,0,10,0,1
+pino (pinaceae),0,0,0,11,0
+roble (quercus),0,0,0,0,12

@@ -1,6 +1,8 @@
 __pycache__/
 *.py[cod]
 
-output/
+#output/
+
+data/
 
 .pytest_cache
