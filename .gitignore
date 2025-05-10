@@ -3,4 +3,4 @@ __pycache__/
 
 output/
 
-app/preprocessing/src/dataset*
+app/preprocessing/dataset*
