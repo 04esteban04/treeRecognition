@@ -81,7 +81,7 @@ def train(model, device, train_loader, optimizer, loss_fn, epochs, test_loader, 
 
         print(f"Epoch {epoch:2d}: Training Loss = {avg_train_loss:.4f}, Test Loss = {test_loss:.4f}, Precision = {accuracy:.2f}%")
 
-    return train_losses, test_losses, test_accuracies, best_model_state
+    return train_losses, test_losses, test_accuracies, best_model_state, accuracy
 
 # -------------------------
 # Evaluación básica
@@ -150,12 +150,13 @@ def evaluate_detailed(model, loader, device, class_names, output_dir="output/tra
 # -------------------------
 # Guardar métricas
 # -------------------------
-def save_metrics_to_file(train_losses, test_losses, test_accuracies, filename="./output/train/trainingMetrics_resnetCustomDataset.json"):
+def save_metrics_to_file(train_losses, test_losses, test_accuracies, accuracy, filename="./output/train/trainingMetrics_resnetCustomDataset.json"):
     
     metrics = {
         "train_losses": train_losses,
         "test_losses": test_losses,
-        "test_accuracies": test_accuracies
+        "test_accuracies": test_accuracies,
+        "model_accuracy": accuracy,
     }
 
     with open(filename, "w") as f:
@@ -238,7 +239,7 @@ def main():
 
     epochs = 20
 
-    train_losses, test_losses, test_accuracies, best_model_state = train(
+    train_losses, test_losses, test_accuracies, best_model_state, model_accuracy = train(
         model, device, train_loader, optimizer, loss_fn, epochs, test_loader, scheduler
     )
 
@@ -246,7 +247,7 @@ def main():
     torch.save(best_model_state, "./output/train/model_resnet_best.pth")
     print("\nModel saved in './output/train/model_resnet_best.pth'")
 
-    save_metrics_to_file(train_losses, test_losses, test_accuracies)
+    save_metrics_to_file(train_losses, test_losses, test_accuracies, model_accuracy)
     plot_metrics_from_file()
 
     evaluate_detailed(model, test_loader, device, train_dataset.classes)
