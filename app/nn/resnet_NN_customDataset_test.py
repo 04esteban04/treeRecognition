@@ -104,17 +104,18 @@ def export_prediction_tables(preds, targets, probs, class_names, image_names=Non
 
         print(f"{filename} exported!")
 
-    os.makedirs("./output/test", exist_ok=True)
-    save_csv("./output/test/allPredictions_customDataset.csv", table_all)
-    save_csv("./output/test/correctPredictions_customDataset.csv", table_correct)
-    save_csv("./output/test/wrongPredictions_customDataset.csv", table_incorrect)
+    os.makedirs("./outputModel/test", exist_ok=True)
+    save_csv("./outputModel/test/allPredictions_customDataset.csv", table_all)
+    save_csv("./outputModel/test/correctPredictions_customDataset.csv", table_correct)
+    save_csv("./outputModel/test/wrongPredictions_customDataset.csv", table_incorrect)
 
 def main():
     #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     device = torch.device("cpu")
     print(f"\nUsing device: {device}")
 
-    data_dir = "./dataset2"
+    data_dir = "../preprocessing/dataset2"
+    
     transform = transforms.Compose([
         transforms.Resize((228, 228)),
         transforms.ToTensor(),
@@ -129,11 +130,11 @@ def main():
     class_names = test_dataset.classes
 
     model = Net(num_classes).to(device)
-    model.load_state_dict(torch.load("./output/train/model_resnet_best.pth", map_location=device))
+    model.load_state_dict(torch.load("./outputModel/train/model_resnet_best.pth", map_location=device))
     model.eval()
 
     # Load accuracy from JSON file
-    with open("./output/train/trainingMetrics_resnetCustomDataset.json", "r") as f:
+    with open("./outputModel/train/trainingMetrics_resnetCustomDataset.json", "r") as f:
         metrics = json.load(f)
 
     accuracy = metrics.get("model_accuracy", 0.0)

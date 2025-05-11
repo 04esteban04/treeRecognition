@@ -11,6 +11,7 @@ import random
 import numpy as np
 import pandas as pd
 from sklearn.metrics import classification_report, confusion_matrix
+import shutil
 
 # -------------------------
 # Semilla para reproducibilidad
@@ -106,7 +107,7 @@ def evaluate(model, device, test_loader, loss_fn):
 # -------------------------
 # Evaluación detallada
 # -------------------------
-def evaluate_detailed(model, loader, device, class_names, output_dir="output/train"):
+def evaluate_detailed(model, loader, device, class_names, output_dir="outputModel/train"):
     model.eval()
     all_preds = []
     all_targets = []
@@ -150,7 +151,7 @@ def evaluate_detailed(model, loader, device, class_names, output_dir="output/tra
 # -------------------------
 # Guardar métricas
 # -------------------------
-def save_metrics_to_file(train_losses, test_losses, test_accuracies, accuracy, filename="./output/train/trainingMetrics_resnetCustomDataset.json"):
+def save_metrics_to_file(train_losses, test_losses, test_accuracies, accuracy, filename="./outputModel/train/trainingMetrics_resnetCustomDataset.json"):
     
     metrics = {
         "train_losses": train_losses,
@@ -167,7 +168,7 @@ def save_metrics_to_file(train_losses, test_losses, test_accuracies, accuracy, f
 # -------------------------
 # Graficar métricas
 # -------------------------
-def plot_metrics_from_file(filename="./output/train/trainingMetrics_resnetCustomDataset.json"):
+def plot_metrics_from_file(filename="./outputModel/train/trainingMetrics_resnetCustomDataset.json"):
     
     with open(filename, "r") as f:
         metrics = json.load(f)
@@ -191,7 +192,7 @@ def plot_metrics_from_file(filename="./output/train/trainingMetrics_resnetCustom
     plt.grid()
 
     plt.tight_layout()
-    plt.savefig("./output/train/trainingMetrics_resnetCustomDataset.png")
+    plt.savefig("./outputModel/train/trainingMetrics_resnetCustomDataset.png")
     plt.show()
 
 # -------------------------
@@ -204,7 +205,7 @@ def main():
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     print(f"\nUsing device: {device}\n")
 
-    data_dir = "./dataset2"
+    data_dir = "../preprocessing/dataset2"
 
     train_transform = transforms.Compose([
         transforms.Resize((228, 228)),
@@ -243,9 +244,15 @@ def main():
         model, device, train_loader, optimizer, loss_fn, epochs, test_loader, scheduler
     )
 
-    os.makedirs("./output/train", exist_ok=True)
-    torch.save(best_model_state, "./output/train/model_resnet_best.pth")
-    print("\nModel saved in './output/train/model_resnet_best.pth'")
+    # Prepare output directory
+    outputDir = "outputModel"
+
+    if os.path.exists(outputDir):
+        shutil.rmtree(outputDir)
+
+    os.makedirs(f"./{outputDir}/train", exist_ok=True)
+    torch.save(best_model_state, f"./{outputDir}/train/model_resnet_best.pth")
+    print(f"\nModel saved in './{outputDir}/train/model_resnet_best.pth'")
 
     save_metrics_to_file(train_losses, test_losses, test_accuracies, model_accuracy)
     plot_metrics_from_file()
