@@ -3,5 +3,5 @@ __pycache__/
 
 output/
 
-app/preprocessing/dataset*
+app/preprocessing/dataset2
 app/preprocessing/output*
