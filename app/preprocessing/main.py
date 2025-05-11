@@ -1,38 +1,30 @@
 import os
-from preprocessImages import (
-    createDirectoryStructure,
-    copyClassDirectories,
-    processImagesInFolder
-)
+import argparse
+from preprocessImages import *
 
 if __name__ == "__main__":
-    # Define source and destination dataset paths
-    sourceDataset = "dataset"
-    destinationDataset = "dataset2"
-
-    # Step 1: Create directory structure for destination dataset (train/test)
-    createDirectoryStructure(destinationDataset)
-
-    # Step 2: Copy all class folders from source to destination/train
-    copyClassDirectories(
-        sourceDir=sourceDataset,
-        destinationDir=os.path.join(destinationDataset, "train")
+    parser = argparse.ArgumentParser(description="Image dataset preprocessing tool")
+    
+    parser.add_argument(
+        "-c", "--create",
+        action="store_true",
+        help="Create a new dataset with training and test images"
     )
 
-    # Step 3: Process images in dataset2/train (keep only resized images)
-    processImagesInFolder(
-        folderPath=os.path.join(destinationDataset, "train"),
-        pixelateOnly=False
+    parser.add_argument(
+        "-p", "--path",
+        type=str,
+        help="Path for individual image processing (resize and pixelate)"
     )
 
-    # Step 4: Copy all class folders from source to destination/test
-    copyClassDirectories(
-        sourceDir=sourceDataset,
-        destinationDir=os.path.join(destinationDataset, "test")
-    )
+    args = parser.parse_args()
 
-    # Step 5: Process images in dataset2/test (keep only pixelated images)
-    processImagesInFolder(
-        folderPath=os.path.join(destinationDataset, "test"),
-        pixelateOnly=True
-    )
+    if args.create:
+        createDataset()
+
+    elif args.path and os.path.exists(args.path):
+        processIndividualImage(args.path)
+
+    else:
+        print("\nWarning: No action specified!" + 
+            "\nPlease use -c to create dataset or -p <path> for custom processing.\n")
