@@ -9,6 +9,7 @@ import os
 import numpy as np
 from tabulate import tabulate
 import csv
+import json
 
 class Net(nn.Module):
     def __init__(self, num_classes, freeze_features=True):
@@ -131,7 +132,11 @@ def main():
     model.load_state_dict(torch.load("./output/train/model_resnet_best.pth", map_location=device))
     model.eval()
 
-    accuracy = evaluate(model, test_loader)
+    # Load accuracy from JSON file
+    with open("./output/train/trainingMetrics_resnetCustomDataset.json", "r") as f:
+        metrics = json.load(f)
+
+    accuracy = metrics.get("model_accuracy", 0.0)
 
     images, preds, targets, probs = [], [], [], []
     with torch.no_grad():

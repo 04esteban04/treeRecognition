@@ -3,6 +3,5 @@ __pycache__/
 
 output/
 
-data/
-
-.pytest_cache
+app/preprocessing/dataset2
+app/preprocessing/output*
