@@ -10,6 +10,7 @@ import numpy as np
 from tabulate import tabulate
 import csv
 import json
+from torchvision.datasets.folder import default_loader
 
 class Net(nn.Module):
     def __init__(self, num_classes, freeze_features=True):
@@ -109,7 +110,7 @@ def export_prediction_tables(preds, targets, probs, class_names, image_names=Non
     save_csv("./outputModel/test/correctPredictions_customDataset.csv", table_correct)
     save_csv("./outputModel/test/wrongPredictions_customDataset.csv", table_incorrect)
 
-def main():
+def testWithDefaultDataset():
     #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     device = torch.device("cpu")
     print(f"\nUsing device: {device}")
@@ -158,6 +159,83 @@ def main():
     
     print(f"\nModel global precision: {accuracy:.2f}%\n")
     export_prediction_tables(preds, targets, probs, class_names)
+
+def guessLabelFromFilename(filename, class_names):
+    filename = filename.lower()
+    for idx, class_name in enumerate(class_names):
+        name_part = class_name.split()[0].lower()
+        if name_part in filename:
+            return idx
+    return -1 
+
+def testWithCustomData(folderPath="../preprocessing/outputPreprocess"):
+    device = torch.device("cpu")
+    print(f"\nUsing device: {device}")
+
+    transform = transforms.Compose([
+        transforms.Resize((228, 228)),
+        transforms.ToTensor(),
+        transforms.Normalize([0.485, 0.456, 0.406],
+                             [0.229, 0.224, 0.225])
+    ])
+
+    valid_exts = ('.jpg', '.jpeg', '.png', '.bmp', '.webp')
+    image_paths = [os.path.join(folderPath, f) for f in os.listdir(folderPath)
+                   if f.lower().endswith(valid_exts)]
+
+    print(f"Found {len(image_paths)} images in the folder.")
+    print(f"Image paths: {image_paths}")
+
+    if not image_paths:
+        print("No valid images found in the folder.")
+        return
+
+    num_classes = 5  
+    class_names = ["arce (Aceraceae)", 
+                    "cedro (cedrus deodara)",
+                    "eucalipto (eucalyptus globulus)",
+                    "pino (pinaceae)",
+                    "roble (quercus)"]  
+
+    model = Net(num_classes).to(device)
+    model.load_state_dict(torch.load("./outputModel/train/model_resnet_best.pth", map_location=device))
+    model.eval()
+
+    with open("./outputModel/train/trainingMetrics_resnetCustomDataset.json", "r") as f:
+        metrics = json.load(f)
+    accuracy = metrics.get("model_accuracy", 0.0)
+
+    images, preds, targets, probs = [], [], [], []
+
+    for img_path in image_paths:
+        try:
+            img = default_loader(img_path)  # PIL image
+            img_tensor = transform(img).unsqueeze(0).to(device)  # [1, C, H, W]
+
+            with torch.no_grad():
+                output = model(img_tensor)
+                prob_vals = F.softmax(output, dim=1)
+                top_prob, pred = prob_vals.max(dim=1)
+
+            images.append(img_tensor.squeeze(0).cpu())
+            preds.append(pred.item())
+                        
+            filename = os.path.basename(img_path)
+            label_idx = guessLabelFromFilename(filename, class_names)
+            targets.append(label_idx if label_idx >= 0 else 0)
+
+            probs.append((top_prob.item()) * 100)
+        except Exception as e:
+            print(f"Error processing image {img_path}: {e}")
+
+    print(f"\n*** Model prediction on custom input images! ***\n")
+    print(f"Model global precision (from training): {accuracy:.2f}%\n")
+    export_prediction_tables(preds, targets, probs, class_names)
+
+def main():
+
+    testWithDefaultDataset()
+    #testWithCustomData()
 
 if __name__ == "__main__":
     main()
