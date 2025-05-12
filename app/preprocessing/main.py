@@ -17,14 +17,25 @@ if __name__ == "__main__":
         help="Path for individual image processing (resize and pixelate)"
     )
 
+    parser.add_argument(
+        "-b", "--bulk",
+        type=str,
+        help="Folder path for bulk image processing"
+    )
+
     args = parser.parse_args()
 
     if args.create:
         createDataset()
 
-    elif args.path and os.path.exists(args.path):
+    elif args.path and os.path.isfile(args.path):
         processIndividualImage(args.path)
 
+    elif args.bulk and os.path.isdir(args.bulk):
+        processFolderImages(args.bulk)
+
     else:
-        print("\nWarning: No action specified!" + 
-            "\nPlease use -c to create dataset or -p <path> for custom processing.\n")
+        print("\nWarning: No valid action or path specified!\n" +
+            "\nUse:\n\t-c to create dataset\n\t" + 
+            "-p <imagePath> for single image processing\n\t" + 
+            "-b <folderPath> for bulk image processing\n")

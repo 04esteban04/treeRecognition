@@ -83,7 +83,8 @@ def export_prediction_tables(preds, targets, probs, class_names, image_names=Non
         real_label = class_names[target]
         pred_label = class_names[pred]
         correct = "✔️" if pred == target else "❌"
-        row = [i, real_label, pred_label, f"{prob:.1f}", correct]
+        image_name = image_names[i] if image_names else "img_"
+        row = [i, image_name, real_label, pred_label, f"{prob:.2f}", correct]
         table_all.append(row)
 
         if correct == "✔️":
@@ -91,7 +92,7 @@ def export_prediction_tables(preds, targets, probs, class_names, image_names=Non
         else:
             table_incorrect.append(row)
 
-    headers = ["Idx", "Real value", "Predicted", "Prob (%)", "Is prediction correct?"]
+    headers = ["Idx", "Image name", "Real value", "Predicted", "Prob (%)", "Is prediction correct?"]
 
     # Print table for all predictions
     print("\n" + tabulate(table_all, headers=headers, tablefmt="grid"))
@@ -140,9 +141,11 @@ def testWithDefaultDataset():
 
     accuracy = metrics.get("model_accuracy", 0.0)
 
-    images, preds, targets, probs = [], [], [], []
+    allImageNames = [os.path.basename(path) for path, _ in test_dataset.samples]
+    images, image_names, preds, targets, probs = [], [], [], [], []
+
     with torch.no_grad():
-        for data, target in test_loader:
+        for batch_idx, (data, target) in enumerate(test_loader):
             data, target = data.to(device), target.to(device)
             output = model(data)
             prob_vals = F.softmax(output, dim=1) 
@@ -152,13 +155,18 @@ def testWithDefaultDataset():
             preds = pred.cpu().tolist()
             targets = target.cpu().tolist()
             probs = (top_probs * 100).cpu().tolist()
+
+            start_idx = batch_idx * test_loader.batch_size
+            end_idx = start_idx + len(data)
+            image_names = allImageNames[start_idx:end_idx]
+
             break  # only one batch
 
     # Use this to show predictions one by one in a window
     #show_predictions_one_by_one(images, preds, targets, probs, class_names, accuracy, max_samples=10)
     
     print(f"\nModel global precision: {accuracy:.2f}%\n")
-    export_prediction_tables(preds, targets, probs, class_names)
+    export_prediction_tables(preds, targets, probs, class_names, image_names)
 
 def guessLabelFromFilename(filename, class_names):
     filename = filename.lower()
@@ -168,7 +176,7 @@ def guessLabelFromFilename(filename, class_names):
             return idx
     return -1 
 
-def testWithCustomData(folderPath="../preprocessing/outputPreprocess"):
+def testWithCustomDataset(folderPath="../preprocessing/outputPreprocess"):
     device = torch.device("cpu")
     print(f"\nUsing device: {device}")
 
@@ -205,7 +213,7 @@ def testWithCustomData(folderPath="../preprocessing/outputPreprocess"):
         metrics = json.load(f)
     accuracy = metrics.get("model_accuracy", 0.0)
 
-    images, preds, targets, probs = [], [], [], []
+    images, image_names, preds, targets, probs = [], [], [], [], []
 
     for img_path in image_paths:
         try:
@@ -221,6 +229,8 @@ def testWithCustomData(folderPath="../preprocessing/outputPreprocess"):
             preds.append(pred.item())
                         
             filename = os.path.basename(img_path)
+            image_names.append(filename)
+
             label_idx = guessLabelFromFilename(filename, class_names)
             targets.append(label_idx if label_idx >= 0 else 0)
 
@@ -230,12 +240,12 @@ def testWithCustomData(folderPath="../preprocessing/outputPreprocess"):
 
     print(f"\n*** Model prediction on custom input images! ***\n")
     print(f"Model global precision (from training): {accuracy:.2f}%\n")
-    export_prediction_tables(preds, targets, probs, class_names)
+    export_prediction_tables(preds, targets, probs, class_names, image_names)
 
 def main():
 
     testWithDefaultDataset()
-    #testWithCustomData()
+    #testWithCustomDataset()
 
 if __name__ == "__main__":
     main()

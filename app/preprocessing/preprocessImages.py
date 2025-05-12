@@ -118,7 +118,7 @@ def createDataset():
 def processIndividualImage(imagePath):
 
     print("\n*** Individual image processing mode selected! ***" +
-        f"\n\nProvided path: {imagePath}\n")
+        f"\n\nProvided path: \n\t{imagePath}\n")
                 
     # Load the image
     image = loadImage(imagePath)
@@ -127,21 +127,53 @@ def processIndividualImage(imagePath):
     resizedImage = resizeImage(image)
     pixelatedImage = pixelateImage(resizedImage)
 
-    # Prepare output directory
-    outputDir = "outputPreprocess"
+    # Construct output file path
+    outputDir = createOutputDirectory("outputPreprocess")
+    outputPath = os.path.join(outputDir, os.path.basename(imagePath))
+
+    # Save the pixelated image created
+    cv2.imwrite(outputPath, pixelatedImage)
+    print(f"Input image saved to: \n\t{outputPath}\n")
+
+# Process all images in the given folder
+# - Resize, pixelate and save the images
+def processFolderImages(folderPath):
     
+    print("\n*** Bulk image processing mode selected! ***" +
+          f"\n\nProvided folder: \n\t{folderPath}\n")
+
+    validExtensions = ('.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp')
+    all_files = os.listdir(folderPath)
+    image_files = [f for f in all_files if f.lower().endswith(validExtensions)]
+
+    if not image_files:
+        print("No valid images found in the folder.")
+        return
+
+    outputDir = createOutputDirectory("outputPreprocess")
+
+    print("Input images in folder saved to:")
+    for filename in image_files:
+        imagePath = os.path.join(folderPath, filename)
+        image = loadImage(imagePath)
+        resizedImage = resizeImage(image)
+        pixelatedImage = pixelateImage(resizedImage)
+
+        outputPath = os.path.join(outputDir, filename)
+        cv2.imwrite(outputPath, pixelatedImage)
+        print(f"\t{outputPath}")
+
+    print("\nBulk processing completed!\n")
+
+# Create the output directory if it doesn't exist
+def createOutputDirectory(outputDir):
+
     if os.path.exists(outputDir):
         shutil.rmtree(outputDir)
-
+    
     os.makedirs(outputDir, exist_ok=True)
 
-    # Construct output file path
-    filename, ext = os.path.splitext(os.path.basename(imagePath))
-    outputPath = os.path.join(outputDir, f"{filename}_pixelate{ext}")
-
-    # Save the pixelated image
-    cv2.imwrite(outputPath, pixelatedImage)
-    print(f"Input image saved to: {outputPath}\n")
+    return outputDir
 
 # Load an image from the given path
 def loadImage(imagePath):
@@ -156,7 +188,8 @@ def loadImage(imagePath):
     image = cv2.imread(imagePath)
 
     if image is None:
-        print(f"*** Error: Image not found or unreadable in {imagePath} ***\n")
+        print(f"*** Error: Could not load image from {imagePath} ***")
+        exit(1)
 
     return image
 
