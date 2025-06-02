@@ -1,6 +1,7 @@
 import os
 import argparse
-from preprocessImages import *
+from preprocessing.preprocessImages import *
+from nn.resnet_NN_test import testWithDefaultDataset, testWithCustomDataset
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Image dataset preprocessing tool")
@@ -27,12 +28,15 @@ if __name__ == "__main__":
 
     if args.create:
         createDataset()
+        testWithDefaultDataset()
 
     elif args.path and os.path.isfile(args.path):
         processIndividualImage(args.path)
+        testWithCustomDataset()
 
     elif args.bulk and os.path.isdir(args.bulk):
         processFolderImages(args.bulk)
+        testWithCustomDataset()
 
     else:
         print("\nWarning: No valid action or path specified!\n" +

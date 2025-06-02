@@ -83,8 +83,9 @@ def processImagesToCreateDataset(folderPath, pixelateOnly=False):
 # Main function to create the dataset
 def createDataset():
     # Define source and destination dataset paths
-    sourceDataset = "dataset"
-    destinationDataset = "dataset2"
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    sourceDataset = os.path.join(baseDir, "dataset")
+    destinationDataset = os.path.join(baseDir, "dataset2")
 
     # Step 1: Create directory structure for destination dataset (train/test)
     createDirectoryStructure(destinationDataset)
@@ -128,7 +129,9 @@ def processIndividualImage(imagePath):
     pixelatedImage = pixelateImage(resizedImage)
 
     # Construct output file path
-    outputDir = createOutputDirectory("outputPreprocess")
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    destinationDir = os.path.join(baseDir, "outputPreprocess")
+    outputDir = createOutputDirectory(destinationDir)
     outputPath = os.path.join(outputDir, os.path.basename(imagePath))
 
     # Save the pixelated image created
@@ -150,7 +153,9 @@ def processFolderImages(folderPath):
         print("No valid images found in the folder.")
         return
 
-    outputDir = createOutputDirectory("outputPreprocess")
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    destinationDir = os.path.join(baseDir, "outputPreprocess")
+    outputDir = createOutputDirectory(destinationDir)
 
     print("Input images in folder saved to:")
     for filename in image_files:

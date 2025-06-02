@@ -74,7 +74,7 @@ def show_predictions_one_by_one(images, preds, targets, probs, class_names, mode
     
     plt.ioff()
 
-def export_prediction_tables(preds, targets, probs, class_names, image_names=None):
+def export_prediction_tables(baseDir, preds, targets, probs, class_names, image_names=None):
     table_all = []
     table_correct = []
     table_incorrect = []
@@ -106,17 +106,16 @@ def export_prediction_tables(preds, targets, probs, class_names, image_names=Non
 
         print(f"{filename} exported!")
 
-    os.makedirs("./outputModel/test", exist_ok=True)
-    save_csv("./outputModel/test/allPredictions_customDataset.csv", table_all)
-    save_csv("./outputModel/test/correctPredictions_customDataset.csv", table_correct)
-    save_csv("./outputModel/test/wrongPredictions_customDataset.csv", table_incorrect)
+
+    os.makedirs(os.path.join(baseDir, "./outputModel/test"), exist_ok=True)
+    save_csv(os.path.join(baseDir,"./outputModel/test/allPredictions_customDataset.csv"), table_all)
+    save_csv(os.path.join(baseDir,"./outputModel/test/correctPredictions_customDataset.csv"), table_correct)
+    save_csv(os.path.join(baseDir,"./outputModel/test/wrongPredictions_customDataset.csv"), table_incorrect)
 
 def testWithDefaultDataset():
     #device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     device = torch.device("cpu")
     print(f"\nUsing device: {device}")
-
-    data_dir = "../preprocessing/dataset2"
     
     transform = transforms.Compose([
         transforms.Resize((228, 228)),
@@ -125,18 +124,22 @@ def testWithDefaultDataset():
                              [0.229, 0.224, 0.225])
     ])
 
-    test_dataset = datasets.ImageFolder(os.path.join(data_dir, "test"), transform=transform)
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    destiantionDir = os.path.join(baseDir, "../preprocessing/dataset2/test")
+    test_dataset = datasets.ImageFolder(destiantionDir, transform=transform)
+
     test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=False)
 
     num_classes = len(test_dataset.classes)
     class_names = test_dataset.classes
 
     model = Net(num_classes).to(device)
-    model.load_state_dict(torch.load("./outputModel/train/model_resnet_best.pth", map_location=device))
+    modelDir = os.path.join(baseDir, "./outputModel/train/model_resnet_best.pth")
+    model.load_state_dict(torch.load(modelDir, map_location=device))
     model.eval()
 
     # Load accuracy from JSON file
-    with open("./outputModel/train/trainingMetrics_resnetCustomDataset.json", "r") as f:
+    with open(os.path.join(baseDir,"./outputModel/train/trainingMetrics_resnetCustomDataset.json"), "r") as f:
         metrics = json.load(f)
 
     accuracy = metrics.get("model_accuracy", 0.0)
@@ -166,7 +169,7 @@ def testWithDefaultDataset():
     #show_predictions_one_by_one(images, preds, targets, probs, class_names, accuracy, max_samples=10)
     
     print(f"\nModel global precision: {accuracy:.2f}%\n")
-    export_prediction_tables(preds, targets, probs, class_names, image_names)
+    export_prediction_tables(baseDir, preds, targets, probs, class_names, image_names)
 
 def guessLabelFromFilename(filename, class_names):
     filename = filename.lower()
@@ -187,11 +190,14 @@ def testWithCustomDataset(folderPath="../preprocessing/outputPreprocess"):
                              [0.229, 0.224, 0.225])
     ])
 
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    folderPath = os.path.join(baseDir, folderPath)
+    
     valid_exts = ('.jpg', '.jpeg', '.png', '.bmp', '.webp')
     image_paths = [os.path.join(folderPath, f) for f in os.listdir(folderPath)
                    if f.lower().endswith(valid_exts)]
 
-    print(f"Found {len(image_paths)} images in the folder.")
+    print(f"Found {len(image_paths)} image(s) in the folder.")
     print(f"Image paths: {image_paths}")
 
     if not image_paths:
@@ -206,10 +212,10 @@ def testWithCustomDataset(folderPath="../preprocessing/outputPreprocess"):
                     "roble (quercus)"]  
 
     model = Net(num_classes).to(device)
-    model.load_state_dict(torch.load("./outputModel/train/model_resnet_best.pth", map_location=device))
+    model.load_state_dict(torch.load(os.path.join(baseDir, "./outputModel/train/model_resnet_best.pth"), map_location=device))
     model.eval()
 
-    with open("./outputModel/train/trainingMetrics_resnetCustomDataset.json", "r") as f:
+    with open(os.path.join(baseDir, "./outputModel/train/trainingMetrics_resnetCustomDataset.json"), "r") as f:
         metrics = json.load(f)
     accuracy = metrics.get("model_accuracy", 0.0)
 
@@ -240,12 +246,5 @@ def testWithCustomDataset(folderPath="../preprocessing/outputPreprocess"):
 
     print(f"\n*** Model prediction on custom input images! ***\n")
     print(f"Model global precision (from training): {accuracy:.2f}%\n")
-    export_prediction_tables(preds, targets, probs, class_names, image_names)
+    export_prediction_tables(baseDir, preds, targets, probs, class_names, image_names)
 
-def main():
-
-    testWithDefaultDataset()
-    #testWithCustomDataset()
-
-if __name__ == "__main__":
-    main()
