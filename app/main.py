@@ -4,12 +4,14 @@ from preprocessing.preprocessImages import *
 from nn.resnet_NN_test import testWithDefaultDataset, testWithCustomDataset
 
 if __name__ == "__main__":
-    parser = argparse.ArgumentParser(description="Image dataset preprocessing tool")
+    
+    # Set up command-line argument parser
+    parser = argparse.ArgumentParser(description="Tree species classification tool")
     
     parser.add_argument(
         "-c", "--create",
         action="store_true",
-        help="Create a new dataset with training and test images"
+        help="Create a default dataset with training and test images"
     )
 
     parser.add_argument(
@@ -27,19 +29,22 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     if args.create:
-        createDataset()
+        # Create a new dataset and run tests using the default dataset
+        processDefaultDataset()
         testWithDefaultDataset()
 
     elif args.path and os.path.isfile(args.path):
-        processIndividualImage(args.path)
+        # Process a single image in the provided path
+        processImage(args.path)
         testWithCustomDataset()
 
     elif args.bulk and os.path.isdir(args.bulk):
-        processFolderImages(args.bulk)
+        # Process all images in the provided folder
+        processFolder(args.bulk)
         testWithCustomDataset()
 
     else:
-        print("\nWarning: No valid action or path specified!\n" +
-            "\nUse:\n\t-c to create dataset\n\t" + 
-            "-p <imagePath> for single image processing\n\t" + 
-            "-b <folderPath> for bulk image processing\n")
+        # Show a warning if no valid argument or path is provided
+        print("\n" + parser.description + 
+            "\n\nWarning: No valid action or path specified!" +
+            "\nUse: -h to get help on how to use the tool\n")

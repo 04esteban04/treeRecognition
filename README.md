@@ -63,6 +63,11 @@ app/
 
 ## Usage 📄
 
+To get info on how to use it use:
+```bash
+python main.py -h
+```
+
 To create and test with the default dataset use:
 ```bash
 python main.py -c
@@ -79,5 +84,6 @@ python main.py -b '<dir_path>'
 ```
 
 > [!IMPORTANT]  
-> For the individual or bulk processing the files should follow the convention: `<name>_<treeSpecies>.<file_extension>`
-> For example: `img9_roble.jpg`
+> For individual or bulk processing, the input files should follow the convention: <br>
+> <div align="center"><code>&lt;name&gt;_&lt;treeSpecies&gt;.&lt;file_extension&gt;</code></div> <br>
+> For example: <code>img9_roble.jpg</code>
