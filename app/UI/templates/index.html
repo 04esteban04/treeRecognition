@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Clasificación de Especies de Árboles</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+</head>
+<body>
+    <div class="container">
+        <h1>Clasificador de Especies de Árboles</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <label for="file">Sube una imagen o un archivo ZIP:</label>
+            <input type="file" name="file" id="file" accept=".jpg,.jpeg,.png,.bmp,.tiff,.webp,.zip">
+            <button type="submit">Procesar archivo</button>
+        </form>
+        <form method="POST">
+            <input type="hidden" name="default" value="true">
+            <button type="submit" class="secondary">Usar dataset por defecto</button>
+        </form>
+        {% if message %}
+        <div class="result">
+            <p>{{ message }}</p>
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
