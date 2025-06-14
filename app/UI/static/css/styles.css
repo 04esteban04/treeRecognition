@@ -92,8 +92,18 @@ footer,
   scroll-snap-align: start;
 }
 
+.analysis-section {
+  min-height: 100vh;
+  padding-top: 80px;
+  background-color: #00c851;
+}
+
 /* ========== Features ========== */
 
 .feature {
   width: clamp(300px, 100%, 400px);
+}
+
+.gray-out {
+  opacity: 0.5;
 }

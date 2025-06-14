@@ -52,10 +52,10 @@
                                 <h1 class="display-5 mb-3">Tree Species Classifier</h1>
                                 <p class="fs-5 text-light">Turn a photo into knowledge!</p>
                                 <div class="d-flex gap-2 mt-4">
-                                    <button class="btn btn-primary btn-lg px-4 rounded-pill" type="button">
+                                    <button id="getStartedBtn" class="btn btn-primary btn-lg px-4 rounded-pill" type="button">
                                         Get started!
                                     </button>
-                                    <button class="btn btn-outline-light btn-lg px-4 rounded-pill" type="button">
+                                    <button id="learnMoreBtn" class="btn btn-outline-light btn-lg px-4 rounded-pill" type="button">
                                         Learn more
                                     </button>
                                 </div>
@@ -132,25 +132,93 @@
 
             <!-- ANALYSIS TAB -->
             <div class="tab-pane fade" id="classify">
-                <h1 class="text-center mb-4">Tree Species Analysis</h1>
-                <form method="POST" enctype="multipart/form-data">
-                    <div class="mb-3">
-                        <label for="file" class="form-label">Upload an image or ZIP file:</label>
-                        <input type="file" name="file" id="file" class="form-control" accept=".jpg,.jpeg,.png,.bmp,.tiff,.webp,.zip" />
+                <div class="container d-flex flex-column justify-content-center align-items-center analysis-section">
+
+                    <!-- Mode selector -->
+                    <div class="d-flex flex-column justify-content-center align-items-center px-4 py-3 text-light">
+                        
+                        <h2 class="fs-1 mb-5 pb-2">Select the desired processing mode</h2>
+                        <div class="row py-5 row-cols-1 row-cols-lg-3 d-flex justify-content-between">
+
+                            <div id="Individual" class="d-flex align-items-start feature">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <button type="button" class="btn btn-primary mx-3 mb-3 rounded fs-4" id="button-individual">
+                                        <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 mt-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
+                                                <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                                                <path d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1z"/>
+                                            </svg>
+                                        </div>
+                                        Individual
+                                    </button>
+                                    <p>Upload a single photo to predict the species of the image provided</p>
+                                </div>
+                            </div>
+
+                            <div id="In-bulk" class="d-flex align-items-start feature">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <button type="button" class="btn btn-primary mx-3 mb-3 rounded fs-4" id="button-bulk">
+                                        <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 mt-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-zip-fill" viewBox="0 0 16 16">
+                                                <path d="M5.5 9.438V8.5h1v.938a1 1 0 0 0 .03.243l.4 1.598-.93.62-.93-.62.4-1.598a1 1 0 0 0 .03-.243" />
+                                                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-4-.5V2h-1V1H6v1h1v1H6v1h1v1H6v1h1v1H5.5V6h-1V5h1V4h-1V3zm0 4.5h1a1 1 0 0 1 1 1v.938l.4 1.599a1 1 0 0 1-.416 1.074l-.93.62a1 1 0 0 1-1.109 0l-.93-.62a1 1 0 0 1-.415-1.074l.4-1.599V8.5a1 1 0 0 1 1-1" />
+                                            </svg>
+                                        </div>
+                                        In-bulk
+                                    </button>
+                                    <p>Upload a zip file to bulk predict the species automatically</p>
+                                </div>
+                            </div>
+
+                            <div id="Default" class="d-flex align-items-start feature">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <button type="button" class="btn btn-primary mx-3 mb-3 rounded fs-4" id="button-default">
+                                        <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 mt-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+                                                <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                                                <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
+                                            </svg>
+                                        </div>
+                                        Default
+                                    </button>
+                                    <p>Predict tree species by using the default dataset provided</p>
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
-                    <button type="submit" class="btn btn-success">Process File</button>
-                </form>
 
-                <form method="POST" class="mt-3">
-                    <input type="hidden" name="default" value="true"/>
-                    <button type="submit" class="btn btn-primary">
-                        Use Default Dataset
-                    </button>
-                </form>
+                    <!-- File upload form -->
+                    <div id="fileUploadFormIndividual" class="d-none">
+                        <form enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="file" class="form-label">Upload an image:</label>
+                                <input type="file" name="file" id="file" class="form-control" accept=".jpg,.jpeg,.png,.bmp,.tiff,.webp" required/>
+                            </div>
+                            <button type="submit" class="btn btn-success">Process File</button>
+                        </form>
+                    </div>
+                        
+                    <!-- ZIP file upload form -->
+                    <div id="fileUploadFormBulk" class="d-none">
+                        <form enctype="multipart/form-data">
+                            <div class="mb-3">
+                                <label for="file" class="form-label">Upload a .zip file:</label>
+                                <input type="file" name="file" id="file" class="form-control" accept=".zip" required/>
+                            </div>
+                            <button type="submit" class="btn btn-success">Process .zip file</button>
+                        </form>
+                    </div>
 
-                {% if message %}
-                    <div class="alert alert-info mt-4">{{ message }}</div>
-                {% endif %}
+                    <!-- Default button -->
+                    <div id="processDefaultBtnWrapper" class="text-center d-none">
+                        <button id="processDefaultDatasetBtn" class="btn btn-primary">Use Default Dataset</button>
+                    </div>
+
+                    <!-- Message box -->
+                    <div id="message" class="alert mt-4 d-none"></div>
+                </div>
             </div>
 
             <!-- ABOUT TAB -->
@@ -162,7 +230,8 @@
         </div>
     </div>
 
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
 </body>
 
 </html>

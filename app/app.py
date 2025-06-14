@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, jsonify
 from werkzeug.utils import secure_filename
 from preprocessing.preprocessImages import processImage, processFolder, processDefaultDataset
 from nn.resnet_NN_test import testWithDefaultDataset, testWithCustomDataset
@@ -17,11 +17,9 @@ STATIC_DIR = os.path.abspath("UI/static")
 app = Flask(__name__, template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
-# Check allowed file types
 def allowedFile(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
-# Clean and recreate upload folder
 def resetUploadFolder():
     folder = app.config['UPLOAD_FOLDER']
     if os.path.exists(folder):
@@ -32,46 +30,57 @@ def resetUploadFolder():
 def inject_now():
     return {'current_year': datetime.now().year}
 
-# Main route
-@app.route("/", methods=["GET", "POST"])
+# Load the main UI
+@app.route("/", methods=["GET"])
 def index():
-    message = ""
+    return render_template("index.html")
 
-    if request.method == "POST":
-        # Option 1: Use default dataset
-        if 'default' in request.form:
-            resetUploadFolder()
-            processDefaultDataset()
-            testWithDefaultDataset()
-            message = "Default dataset was processed."
+# Process default dataset
+@app.route("/process/default", methods=["POST"])
+def process_default():
+    resetUploadFolder()
+    processDefaultDataset()
+    testWithDefaultDataset()
+    return jsonify({"message": "Default dataset was processed."}), 200
 
-        # Option 2: Handle uploaded file or zip
-        elif 'file' in request.files:
-            file = request.files['file']
-            if file and allowedFile(file.filename):
-                resetUploadFolder()
-                filename = secure_filename(file.filename)
-                save_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
-                file.save(save_path)
+# Process individual image
+@app.route("/process/image", methods=["POST"])
+def process_image():
+    file = request.files.get('file')
 
-                if filename.endswith(".zip"):
-                    with zipfile.ZipFile(save_path, 'r') as zip_ref:
-                        zip_ref.extractall(app.config['UPLOAD_FOLDER'])
+    if not file or not allowedFile(file.filename):
+        return jsonify({"error": "Unsupported or missing file."}), 400
 
-                    processFolder(app.config['UPLOAD_FOLDER'])
-                    testWithCustomDataset()
-                    message = "Images from ZIP file were processed."
+    resetUploadFolder()
+    filename = secure_filename(file.filename)
+    path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(path)
 
-                else:
-                    processImage(save_path)
-                    testWithCustomDataset()
-                    message = "Single image was processed."
-            else:
-                message = "Unsupported file type."
+    processImage(path)
+    testWithCustomDataset()
+    return jsonify({"message": "Single image was processed."}), 200
 
-    return render_template("index.html", message=message)
+# Process batch images from ZIP
+@app.route("/process/batch", methods=["POST"])
+def process_batch():
+    file = request.files.get('file')
 
-# Start the server
+    if not file or not allowedFile(file.filename) or not file.filename.endswith(".zip"):
+        return jsonify({"error": "Please upload a valid .zip file."}), 400
+
+    resetUploadFolder()
+    filename = secure_filename(file.filename)
+    zip_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+    file.save(zip_path)
+
+    with zipfile.ZipFile(zip_path, 'r') as zip_ref:
+        zip_ref.extractall(app.config['UPLOAD_FOLDER'])
+
+    processFolder(app.config['UPLOAD_FOLDER'])
+    testWithCustomDataset()
+    return jsonify({"message": "Images from ZIP were processed."}), 200
+
+# Run the app
 if __name__ == "__main__":
     os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     app.run(debug=True)
