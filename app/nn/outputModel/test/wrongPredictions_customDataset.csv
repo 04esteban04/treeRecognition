@@ -1,6 +1,4 @@
 Idx,Image name,Real value,Predicted,Prob (%),Is prediction correct?
-2,img2_pixelate.jpg,arce (Aceraceae),roble (quercus),44.28,❌
-8,img8_pixelate.jpg,arce (Aceraceae),roble (quercus),34.36,❌
-10,img10_pixelate.jpg,cedro (cedrus deodara),pino (pinaceae),62.41,❌
-19,img9_pixelate.jpg,cedro (cedrus deodara),pino (pinaceae),61.39,❌
-22,img1_pixelate.jpg,eucalipto (eucalyptus globulus),roble (quercus),62.32,❌
+1,img10_cedro_uploads.jpg,cedro (cedrus deodara),pino (pinaceae),62.41,❌
+4,img2_arce_uploads.jpg,arce (Aceraceae),roble (quercus),44.28,❌
+13,img9_cedro_uploads.jpg,cedro (cedrus deodara),pino (pinaceae),61.39,❌

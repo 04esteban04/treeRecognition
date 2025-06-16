@@ -125,8 +125,8 @@ def testWithDefaultDataset():
     ])
 
     baseDir = os.path.dirname(os.path.abspath(__file__))
-    destiantionDir = os.path.join(baseDir, "../preprocessing/dataset2/test")
-    test_dataset = datasets.ImageFolder(destiantionDir, transform=transform)
+    destinationDir = os.path.join(baseDir, "../preprocessing/dataset2/test")
+    test_dataset = datasets.ImageFolder(destinationDir, transform=transform)
 
     test_loader = DataLoader(test_dataset, batch_size=1000, shuffle=False)
 

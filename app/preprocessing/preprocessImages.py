@@ -18,6 +18,8 @@ def processDefaultDataset():
     sourceDataset = os.path.join(baseDir, "dataset")
     destinationDataset = os.path.join(baseDir, "dataset2")
 
+    outputDir = auxCreateOutputDirectory(os.path.join(baseDir, "outputPreprocess"))
+
     # Reset base directory and subdirectories
     auxResetDirectory(destinationDataset)
     for subDir in ['train', 'test']:
@@ -123,20 +125,27 @@ def auxPixelateImage(image, pixelSize=3):
 def auxProcessSingleImage(inputPath, outputDir, mode='pixelate'):
     image = auxLoadImage(inputPath)
     resized = auxResizeImage(image)
+    
+    # Get the name of the class from the parent folder of the image
+    class_name = os.path.basename(os.path.dirname(inputPath)).split(" (")[0]
 
     if mode == 'resize':
         output = resized
         suffix = '_resized'
     elif mode == 'pixelate':
         output = auxPixelateImage(resized)
-        suffix = '_pixelate'
+        suffix = '_' + class_name
     else:
         raise ValueError("Unsupported mode")
 
-    # Get file name and extension
+    # Get file name and extension to save the output image
     name, ext = os.path.splitext(os.path.basename(inputPath))
     outputPath = os.path.join(outputDir, f"{name}{suffix}{ext}")
     cv2.imwrite(outputPath, output)
+
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    outputPathPreprocess = os.path.join(baseDir, "outputPreprocess", f"{name}_{class_name}{ext}")
+    cv2.imwrite(outputPathPreprocess, output)
 
     return outputPath
 

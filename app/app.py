@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, send_from_directory
 from werkzeug.utils import secure_filename
 from preprocessing.preprocessImages import processImage, processFolder, processDefaultDataset
 from nn.resnet_NN_test import testWithDefaultDataset, testWithCustomDataset
@@ -6,6 +6,7 @@ from datetime import datetime
 import os
 import shutil
 import zipfile
+import pandas as pd
 
 # Configuration
 UPLOAD_FOLDER = 'uploads'
@@ -35,13 +36,40 @@ def inject_now():
 def index():
     return render_template("index.html")
 
+# Serve static files
+@app.route("/preprocessed_images/<filename>")
+def serve_preprocessed_image(filename):
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    folder = os.path.join(baseDir, "preprocessing", "outputPreprocess")
+    return send_from_directory(folder, filename)
+
 # Process default dataset
 @app.route("/process/default", methods=["POST"])
 def process_default():
     resetUploadFolder()
     processDefaultDataset()
     testWithDefaultDataset()
-    return jsonify({"message": "Default dataset was processed."}), 200
+
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(base_dir, "nn", "outputModel", "test", "allPredictions_customDataset.csv")
+    
+    if not os.path.exists(csv_path):
+        return jsonify({
+            "error": "Default prediction CSV file not found."
+        }), 404
+
+    try:
+        df = pd.read_csv(csv_path)
+        results = df.to_dict(orient="records")
+        return jsonify({
+            "message": "Default dataset was processed.",
+            "results": results
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "error": f"Failed to read predictions: {str(e)}"
+        }), 500
 
 # Process individual image
 @app.route("/process/image", methods=["POST"])
@@ -58,7 +86,29 @@ def process_image():
 
     processImage(path)
     testWithCustomDataset()
-    return jsonify({"message": "Single image was processed."}), 200
+    
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(base_dir, "nn", "outputModel", "test", "allPredictions_customDataset.csv")
+    
+    if not os.path.exists(csv_path):
+        return jsonify({
+            "error": "Prediction CSV file not found."
+        }), 404
+
+    try:
+        df = pd.read_csv(csv_path)
+        results = df.to_dict(orient="records")
+        return jsonify({
+            "message": "Single image dataset was processed.",
+            "results": results
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "error": f"Failed to read predictions: {str(e)}"
+        }), 500
+    
+    #return jsonify({"message": "Single image was processed."}), 200
 
 # Process batch images from ZIP
 @app.route("/process/batch", methods=["POST"])
@@ -78,7 +128,29 @@ def process_batch():
 
     processFolder(app.config['UPLOAD_FOLDER'])
     testWithCustomDataset()
-    return jsonify({"message": "Images from ZIP were processed."}), 200
+    
+    base_dir = os.path.dirname(os.path.abspath(__file__))
+    csv_path = os.path.join(base_dir, "nn", "outputModel", "test", "allPredictions_customDataset.csv")
+    
+    if not os.path.exists(csv_path):
+        return jsonify({
+            "error": "Prediction CSV file not found."
+        }), 404
+
+    try:
+        df = pd.read_csv(csv_path)
+        results = df.to_dict(orient="records")
+        return jsonify({
+            "message": "Batch of images was processed.",
+            "results": results
+        }), 200
+
+    except Exception as e:
+        return jsonify({
+            "error": f"Failed to read predictions: {str(e)}"
+        }), 500
+
+    #return jsonify({"message": "Images from ZIP were processed."}), 200
 
 # Run the app
 if __name__ == "__main__":
