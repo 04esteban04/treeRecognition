@@ -7,3 +7,5 @@ uploads/
 app/preprocessing/dataset2
 app/preprocessing/output*
 app/preprocessing/*.zip
+
+app/nn/outputModel/test/*.pdf
