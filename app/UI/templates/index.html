@@ -200,7 +200,17 @@
                                 <label for="file" class="form-label text-light">Upload an image:</label>
                                 <input type="file" name="file" id="file" class="form-control" accept=".jpg,.jpeg,.png,.bmp,.tiff,.webp" required/>
                             </div>
-                            <button type="submit" class="btn btn-success">Process File</button>
+
+                            <button type="submit" class="btn btn-success submit-btn">
+                                <span class="btn-text">Process File</span>
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                <span class="check-icon d-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                    </svg>
+                                </span>
+                            </button>
+
                         </form>
                     </div>
                         
@@ -211,18 +221,38 @@
                                 <label for="file" class="form-label text-light">Upload a .zip file:</label>
                                 <input type="file" name="file" id="file" class="form-control" accept=".zip" required/>
                             </div>
-                            <button type="submit" class="btn btn-success">Process .zip file</button>
+
+                            <button type="submit" class="btn btn-success submit-btn">
+                                <span class="btn-text">Process Bulk</span>
+                                <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                <span class="check-icon d-none">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                        <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                    </svg>
+                                </span>
+                            </button>
+
+
                         </form>
                     </div>
 
                     <!-- Default processing button -->
                     <div id="processDefaultBtnWrapper" class="text-center d-none">
-                        <button id="processDefaultDatasetBtn" class="btn btn-primary">Use Default Dataset</button>
+
+                        <button id="processDefaultDatasetBtn" class="btn btn-primary">
+                            <span class="btn-text">Process default dataset</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            <span class="check-icon d-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                            </span>
+                        </button>
+
                     </div>
 
                     <!-- Message box -->
                     <div id="message" class="alert mt-4 d-none"></div>
-
                 </div>
 
                 <!-- Results -->

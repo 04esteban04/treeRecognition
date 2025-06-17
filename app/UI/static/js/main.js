@@ -26,6 +26,8 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btnBulk = document.getElementById("button-bulk");
 	const btnDefault = document.getElementById("button-default");
 
+	const forms = document.querySelectorAll("form");
+
 	let currentView = "card"; 
 
 	function toggleView() {
@@ -41,8 +43,6 @@ document.addEventListener("DOMContentLoaded", () => {
 			currentView = "card";
 		}
 	}
-
-	toggleViewBtn.addEventListener("click", toggleView);
 	
 	// Show processing confirmation message
 	function showMessage(msg, isError = false) {
@@ -74,6 +74,73 @@ document.addEventListener("DOMContentLoaded", () => {
 		btnIndividual.classList.add("btn-outline-light");
   		btnBulk.classList.add("btn-outline-light");
 		btnDefault.classList.add("btn-outline-light");
+	}
+
+	// Change loading spinner in buttons when submitting
+	function loadingButtons(){
+
+		// Prevent multiple form submits
+		forms.forEach(form => {
+			form.addEventListener("submit", function (e) {
+				const button = form.querySelector(".submit-btn");
+				if (button) {
+					const textSpan = button.querySelector(".btn-text");
+					const spinner = button.querySelector(".spinner-border");
+					textSpan.classList.add("d-none");
+					spinner.classList.remove("d-none");
+					button.disabled = true;
+				}
+			});
+		});
+
+		// Default dataset button
+		if (processDefaultBtn) {
+			processDefaultBtn.addEventListener("click", function () {
+				const textSpan = processDefaultBtn.querySelector(".btn-text");
+				const spinner = processDefaultBtn.querySelector(".spinner-border");
+
+				if (textSpan && spinner) {
+					textSpan.classList.add("d-none");
+					spinner.classList.remove("d-none");
+					processDefaultBtn.disabled = true;
+				}
+			});
+		}
+	}
+
+	// Reset all buttons with class "submit-btn"
+	function resetLoadingButtons() {
+		const buttons = document.querySelectorAll(".submit-btn, #processDefaultDatasetBtn");
+		buttons.forEach(button => {
+			const textSpan = button.querySelector(".btn-text");
+			const spinner = button.querySelector(".spinner-border");
+
+			if (textSpan && spinner) {
+				textSpan.classList.remove("d-none");
+				spinner.classList.add("d-none");
+				button.disabled = false;
+			}
+		});
+	}
+
+	// Update button status when data is received
+	function showSuccessCheck(button) {
+		const textSpan = button.querySelector(".btn-text");
+		const spinner = button.querySelector(".spinner-border");
+		const checkIcon = button.querySelector(".check-icon");
+
+		if (textSpan && spinner && checkIcon) {
+			spinner.classList.add("d-none");
+			checkIcon.classList.remove("d-none");
+		}
+
+		setTimeout(() => {
+			checkIcon.classList.add("d-none");
+			//textSpan.classList.add("d-none");
+			button.disabled = false;
+
+			results.scrollIntoView({ behavior: "smooth" });
+		}, 1000);
 	}
 
 	// Tab navigation from main page buttons
@@ -224,11 +291,17 @@ document.addEventListener("DOMContentLoaded", () => {
 						});
 
 						resultCardContainer.classList.remove("d-none");
+						
+						const button = formElement.querySelector(".submit-btn");
+						if (button) {
+							showSuccessCheck(button);
+						}
 
-						results.scrollIntoView({ behavior: "smooth" });
 					} else {
 						showMessage("No results found.");
 					}
+
+					resetLoadingButtons(); 
 
 				} else {
 					showMessage(result.error || "An error occurred during processing.", true);
@@ -318,10 +391,16 @@ document.addEventListener("DOMContentLoaded", () => {
 
 					resultCardContainer.classList.remove("d-none");
 
-					results.scrollIntoView({ behavior: "smooth" });
+					const button = processDefaultBtn;
+					if (button) {
+						showSuccessCheck(button);
+					}
+
 				} else {
 					showMessage("No results found.");
 				}
+
+				resetLoadingButtons(); 
 
 			} else {
 				showMessage(result.error || "An error occurred.", true);
@@ -331,8 +410,11 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
+	toggleViewBtn.addEventListener("click", toggleView);
+
 	// Handle file form submissions by mode
 	handleFileFormSubmit(fileForm, false);
 	handleFileFormSubmit(fileFormBulk, true);
 
+	loadingButtons();
 });
