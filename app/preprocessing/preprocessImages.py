@@ -134,7 +134,7 @@ def auxProcessSingleImage(inputPath, outputDir, mode='pixelate'):
         suffix = '_resized'
     elif mode == 'pixelate':
         output = auxPixelateImage(resized)
-        suffix = '_' + class_name
+        suffix = '_' + class_name if (class_name != "uploads") else ''
     else:
         raise ValueError("Unsupported mode")
 
@@ -143,10 +143,11 @@ def auxProcessSingleImage(inputPath, outputDir, mode='pixelate'):
     outputPath = os.path.join(outputDir, f"{name}{suffix}{ext}")
     cv2.imwrite(outputPath, output)
 
-    baseDir = os.path.dirname(os.path.abspath(__file__))
-    outputPathPreprocess = os.path.join(baseDir, "outputPreprocess", f"{name}_{class_name}{ext}")
-    cv2.imwrite(outputPathPreprocess, output)
-
+    if suffix != '_resized':
+        baseDir = os.path.dirname(os.path.abspath(__file__))
+        outputPathPreprocess = os.path.join(baseDir, "outputPreprocess", f"{name}{suffix}{ext}")
+        cv2.imwrite(outputPathPreprocess, output)
+    
     return outputPath
 
 # Auxiliary function to reset directories

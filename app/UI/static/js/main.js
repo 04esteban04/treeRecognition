@@ -3,10 +3,6 @@ document.addEventListener("DOMContentLoaded", () => {
 	// Elements
 	const messageBox = document.getElementById("message");
 
-	const fileForm = document.getElementById("fileUploadFormIndividual");
-	const fileFormBulk = document.getElementById("fileUploadFormBulk");
-	const fileInput = document.getElementById("file");
-
 	const defaultWrapper = document.getElementById("processDefaultBtnWrapper");
 	const processDefaultBtn = document.getElementById("processDefaultDatasetBtn");
 
@@ -27,6 +23,19 @@ document.addEventListener("DOMContentLoaded", () => {
 	const btnDefault = document.getElementById("button-default");
 
 	const forms = document.querySelectorAll("form");
+	const fileForm = document.getElementById("fileUploadFormIndividual");
+	const fileFormBulk = document.getElementById("fileUploadFormBulk");
+
+	const fileUploadFormIndividual = document.querySelector('#fileUploadFormIndividual input[type="file"]');
+	const uploadFileBtn = document.getElementById('uploadFileBtn');
+	const fileNameSpan = document.getElementById('fileName');
+
+	const bulkFileInput = document.querySelector('#fileUploadFormBulk input[type="file"]');
+	const uploadBulkBtn = document.getElementById('uploadBulkBtn');
+	const bulkFileNameSpan = document.getElementById('bulkFileName');
+
+	const getStartedBtn = document.getElementById("getStartedBtn");
+	const learnMoreBtn = document.getElementById("learnMoreBtn");
 
 	let currentView = "card"; 
 
@@ -61,11 +70,10 @@ document.addEventListener("DOMContentLoaded", () => {
 		results.classList.add("d-none");
 	
 		// Clear previous values
-		fileInput.value = "";
 		resultCardGrid.innerHTML = "";
 		resultTableBody.innerHTML = "";
-		toggleViewBtn.textContent = "Toggle table view";
-		currentView = "card";
+		currentView = "table";
+		toggleView();
 
 		btnIndividual.classList.remove("btn-light");
   		btnBulk.classList.remove("btn-light");
@@ -136,66 +144,11 @@ document.addEventListener("DOMContentLoaded", () => {
 
 		setTimeout(() => {
 			checkIcon.classList.add("d-none");
-			//textSpan.classList.add("d-none");
 			button.disabled = false;
 
 			results.scrollIntoView({ behavior: "smooth" });
 		}, 1000);
 	}
-
-	// Tab navigation from main page buttons
-	document.getElementById("getStartedBtn").addEventListener("click", async (e) => {
-		e.preventDefault();
-
-		document.getElementById("tab-analysis").classList.add("active");
-		document.getElementById("classify").classList.add("show", "active");
-
-		document.getElementById("tab-home").classList.remove("active");
-		document.getElementById("home").classList.remove("show", "active");
-	});
-
-	document.getElementById("learnMoreBtn").addEventListener("click", (e) => {
-  		e.preventDefault();
-
-  		document.getElementById("tab-about").classList.add("active");
-		document.getElementById("about").classList.add("show", "active");
-
-		document.getElementById("tab-home").classList.remove("active");
-		document.getElementById("home").classList.remove("show", "active");
-	});
-
-	 // Button event listeners
-	btnIndividual.addEventListener("click", () => {
-		resetMode();
-		fileForm.classList.remove("d-none");
-		fileInput.accept = ".jpg,.jpeg,.png,.bmp,.tiff,.webp";
-		btnIndividualContainer.classList.remove("gray-out");
-		btnIndividual.classList.remove("btn-outline-light");
-		btnIndividual.classList.add("btn-light");
-		btnBulkContainer.classList.add("gray-out");
-		btnDefaultContainer.classList.add("gray-out");
-	});
-
-	btnBulk.addEventListener("click", () => {
-		resetMode();
-		fileFormBulk.classList.remove("d-none");
-		fileInput.accept = ".zip";
-		btnBulkContainer.classList.remove("gray-out");
-		btnBulk.classList.remove("btn-outline-light");
-		btnBulk.classList.add("btn-light");
-		btnIndividualContainer.classList.add("gray-out");
-		btnDefaultContainer.classList.add("gray-out");
-	});
-
-	btnDefault.addEventListener("click", () => {
-		resetMode();
-		defaultWrapper.classList.remove("d-none");
-		btnDefaultContainer.classList.remove("gray-out");
-		btnDefault.classList.remove("btn-outline-light");
-		btnDefault.classList.add("btn-light");
-		btnIndividualContainer.classList.add("gray-out");
-		btnBulkContainer.classList.add("gray-out");
-	});
 
 	// Process individual and bulk file upload
 	function handleFileFormSubmit(formElement, isBulk = false) {
@@ -225,7 +178,6 @@ document.addEventListener("DOMContentLoaded", () => {
 				if (response.ok) {
 					showMessage(result.message || "File processed successfully.");
 					
-
 					// Clear previous cards
 					resultCardGrid.innerHTML = "";
 					resultTableBody.innerHTML = "";
@@ -312,6 +264,58 @@ document.addEventListener("DOMContentLoaded", () => {
 		});
 	}
 
+	// Tab navigation from main page buttons
+	getStartedBtn.addEventListener("click", async (e) => {
+		e.preventDefault();
+
+		document.getElementById("tab-analysis").classList.add("active");
+		document.getElementById("classify").classList.add("show", "active");
+
+		document.getElementById("tab-home").classList.remove("active");
+		document.getElementById("home").classList.remove("show", "active");
+	});
+
+	learnMoreBtn.addEventListener("click", (e) => {
+  		e.preventDefault();
+
+  		document.getElementById("tab-about").classList.add("active");
+		document.getElementById("about").classList.add("show", "active");
+
+		document.getElementById("tab-home").classList.remove("active");
+		document.getElementById("home").classList.remove("show", "active");
+	});
+
+	 // Button event listeners
+	btnIndividual.addEventListener("click", () => {
+		resetMode();
+		fileForm.classList.remove("d-none");
+		btnIndividualContainer.classList.remove("gray-out");
+		btnIndividual.classList.remove("btn-outline-light");
+		btnIndividual.classList.add("btn-light");
+		btnBulkContainer.classList.add("gray-out");
+		btnDefaultContainer.classList.add("gray-out");
+	});
+
+	btnBulk.addEventListener("click", () => {
+		resetMode();
+		fileFormBulk.classList.remove("d-none");
+		btnBulkContainer.classList.remove("gray-out");
+		btnBulk.classList.remove("btn-outline-light");
+		btnBulk.classList.add("btn-light");
+		btnIndividualContainer.classList.add("gray-out");
+		btnDefaultContainer.classList.add("gray-out");
+	});
+
+	btnDefault.addEventListener("click", () => {
+		resetMode();
+		defaultWrapper.classList.remove("d-none");
+		btnDefaultContainer.classList.remove("gray-out");
+		btnDefault.classList.remove("btn-outline-light");
+		btnDefault.classList.add("btn-light");
+		btnIndividualContainer.classList.add("gray-out");
+		btnBulkContainer.classList.add("gray-out");
+	});
+
 	// Process default dataset
 	processDefaultBtn.addEventListener("click", async () => {
 		try {
@@ -339,8 +343,8 @@ document.addEventListener("DOMContentLoaded", () => {
 						col.classList.add("col");
 
 						col.innerHTML = `
-							<div class="card h-100 shadow-sm">
-								<img src="/preprocessed_images/${item["Image name"]}" class="card-img-top mt-2" alt="${item["Image name"]}" style="height: 200px; width: 100%; object-fit: contain;">
+							<div class="card h-100 shadow-sm card-image-wrapper">
+								<img src="/preprocessed_images/${item["Image name"]}" class="card-img-top mt-2 card-image" alt="${item["Image name"]}">
 								<div class="card-body text-center">
 									<h5 class="card-title mb-2">File: ${item["Image name"]}</h5>
 									<hr>
@@ -391,10 +395,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 					resultCardContainer.classList.remove("d-none");
 
-					const button = processDefaultBtn;
-					if (button) {
-						showSuccessCheck(button);
-					}
+					showSuccessCheck(processDefaultBtn);
 
 				} else {
 					showMessage("No results found.");
@@ -410,11 +411,36 @@ document.addEventListener("DOMContentLoaded", () => {
 		}
 	});
 
+	// Update file name display when a file is selected
+	fileUploadFormIndividual.addEventListener('change', () => {
+		if (fileUploadFormIndividual.files.length > 0) {
+			fileNameSpan.textContent = fileUploadFormIndividual.files[0].name;
+		} else {
+			fileNameSpan.textContent = 'No file chosen';
+		}
+	});
+
+	// Update bulk file name display when a file is selected
+	bulkFileInput.addEventListener('change', () => {
+		if (bulkFileInput.files.length > 0) {
+			bulkFileNameSpan.textContent = bulkFileInput.files[0].name;
+		} else {
+			bulkFileNameSpan.textContent = 'No file chosen';
+		}
+	});
+
+	// Toggle between card and table views
 	toggleViewBtn.addEventListener("click", toggleView);
+	
+	// Handle file upload button clicks
+	uploadFileBtn.addEventListener('click', () => fileUploadFormIndividual.click());
+	uploadBulkBtn.addEventListener('click', () => bulkFileInput.click());
 
 	// Handle file form submissions by mode
 	handleFileFormSubmit(fileForm, false);
 	handleFileFormSubmit(fileFormBulk, true);
 
+	// Change loading spinner in buttons when submitting
 	loadingButtons();
+
 });

@@ -1,13 +1,50 @@
 Idx,Image name,Real value,Predicted,Prob (%),Is prediction correct?
-0,img10_arce_uploads.jpg,arce (Aceraceae),arce (Aceraceae),87.23,✔️
-2,img10_eucalipto_uploads.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),86.73,✔️
-3,img11_roble_uploads.jpg,roble (quercus),roble (quercus),85.12,✔️
-5,img2_pino_uploads.jpg,pino (pinaceae),pino (pinaceae),96.54,✔️
-6,img3_arce_uploads.jpg,arce (Aceraceae),arce (Aceraceae),91.28,✔️
-7,img3_eucalipto_uploads.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),45.59,✔️
-8,img3_roble_uploads.jpg,roble (quercus),roble (quercus),66.98,✔️
-9,img4_cedro_uploads.jpg,cedro (cedrus deodara),cedro (cedrus deodara),61.71,✔️
-10,img4_pino_uploads.jpg,pino (pinaceae),pino (pinaceae),81.02,✔️
-11,img5_eucalipto_uploads.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),51.05,✔️
-12,img5_pino_uploads.jpg,pino (pinaceae),pino (pinaceae),68.85,✔️
-14,img9_roble_uploads.jpg,roble (quercus),roble (quercus),87.06,✔️
+0,img10_arce.jpg,arce (Aceraceae),arce (Aceraceae),87.23,✔️
+1,img1_arce.jpg,arce (Aceraceae),arce (Aceraceae),74.68,✔️
+3,img3_arce.jpg,arce (Aceraceae),arce (Aceraceae),91.28,✔️
+4,img4_arce.jpg,arce (Aceraceae),arce (Aceraceae),88.84,✔️
+5,img5_arce.jpg,arce (Aceraceae),arce (Aceraceae),40.16,✔️
+6,img6_arce.jpg,arce (Aceraceae),arce (Aceraceae),71.30,✔️
+7,img7_arce.jpg,arce (Aceraceae),arce (Aceraceae),76.13,✔️
+9,img9_arce.jpg,arce (Aceraceae),arce (Aceraceae),73.21,✔️
+11,img1_cedro.jpg,cedro (cedrus deodara),cedro (cedrus deodara),50.57,✔️
+12,img2_cedro.jpg,cedro (cedrus deodara),cedro (cedrus deodara),53.65,✔️
+13,img3_cedro.jpg,cedro (cedrus deodara),cedro (cedrus deodara),51.66,✔️
+14,img4_cedro.jpg,cedro (cedrus deodara),cedro (cedrus deodara),61.71,✔️
+15,img5_cedro.jpg,cedro (cedrus deodara),cedro (cedrus deodara),51.68,✔️
+16,img6_cedro.jpg,cedro (cedrus deodara),cedro (cedrus deodara),39.93,✔️
+17,img7_cedro.jpg,cedro (cedrus deodara),cedro (cedrus deodara),53.35,✔️
+18,img8_cedro.jpg,cedro (cedrus deodara),cedro (cedrus deodara),41.91,✔️
+20,img10_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),86.73,✔️
+21,img11_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),72.78,✔️
+23,img2_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),47.27,✔️
+24,img3_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),45.59,✔️
+25,img4_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),65.97,✔️
+26,img5_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),51.05,✔️
+27,img6_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),80.69,✔️
+28,img7_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),86.78,✔️
+29,img8_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),96.64,✔️
+30,img9_eucalipto.jpg,eucalipto (eucalyptus globulus),eucalipto (eucalyptus globulus),91.38,✔️
+31,img10_pino.jpg,pino (pinaceae),pino (pinaceae),54.79,✔️
+32,img11_pino.jpg,pino (pinaceae),pino (pinaceae),95.94,✔️
+33,img1_pino.jpg,pino (pinaceae),pino (pinaceae),84.15,✔️
+34,img2_pino.jpg,pino (pinaceae),pino (pinaceae),96.54,✔️
+35,img3_pino.jpg,pino (pinaceae),pino (pinaceae),86.05,✔️
+36,img4_pino.jpg,pino (pinaceae),pino (pinaceae),81.02,✔️
+37,img5_pino.jpg,pino (pinaceae),pino (pinaceae),68.85,✔️
+38,img6_pino.jpg,pino (pinaceae),pino (pinaceae),94.87,✔️
+39,img7_pino.jpg,pino (pinaceae),pino (pinaceae),96.30,✔️
+40,img8_pino.jpg,pino (pinaceae),pino (pinaceae),85.09,✔️
+41,img9_pino.jpg,pino (pinaceae),pino (pinaceae),79.57,✔️
+42,img10_roble.jpg,roble (quercus),roble (quercus),48.68,✔️
+43,img11_roble.jpg,roble (quercus),roble (quercus),85.12,✔️
+44,img12_roble.jpg,roble (quercus),roble (quercus),64.81,✔️
+45,img1_roble.jpg,roble (quercus),roble (quercus),70.44,✔️
+46,img2_roble.jpg,roble (quercus),roble (quercus),72.12,✔️
+47,img3_roble.jpg,roble (quercus),roble (quercus),66.98,✔️
+48,img4_roble.jpg,roble (quercus),roble (quercus),84.60,✔️
+49,img5_roble.jpg,roble (quercus),roble (quercus),95.30,✔️
+50,img6_roble.jpg,roble (quercus),roble (quercus),82.31,✔️
+51,img7_roble.jpg,roble (quercus),roble (quercus),86.13,✔️
+52,img8_roble.jpg,roble (quercus),roble (quercus),85.04,✔️
+53,img9_roble.jpg,roble (quercus),roble (quercus),87.06,✔️

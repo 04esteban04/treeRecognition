@@ -24,15 +24,18 @@ STATIC_DIR = os.path.abspath("UI/static")
 app = Flask(__name__, template_folder=TEMPLATE_DIR, static_folder=STATIC_DIR)
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
+# Check file extensions
 def allowedFile(filename):
     return '.' in filename and filename.rsplit('.', 1)[1].lower() in ALLOWED_EXTENSIONS
 
+# Create upload folder if it doesn't exist
 def resetUploadFolder():
     folder = app.config['UPLOAD_FOLDER']
     if os.path.exists(folder):
         shutil.rmtree(folder)
     os.makedirs(folder)
 
+# Context processor to inject current year into templates
 @app.context_processor
 def inject_now():
     return {'current_year': datetime.now().year}
@@ -114,8 +117,6 @@ def process_image():
             "error": f"Failed to read predictions: {str(e)}"
         }), 500
     
-    #return jsonify({"message": "Single image was processed."}), 200
-
 # Process batch images from ZIP
 @app.route("/process/batch", methods=["POST"])
 def process_batch():
@@ -156,13 +157,12 @@ def process_batch():
             "error": f"Failed to read predictions: {str(e)}"
         }), 500
 
-    #return jsonify({"message": "Images from ZIP were processed."}), 200
-
 # Create report pdf
 @app.route('/export-pdf')
 def export_pdf():
     return generate_prediction_pdf()
 
+# Generate PDF with predictions and metrics
 def generate_prediction_pdf():
     try:
         # === Setup Paths ===
@@ -304,5 +304,4 @@ def generate_prediction_pdf():
 
 # Run the app
 if __name__ == "__main__":
-    os.makedirs(UPLOAD_FOLDER, exist_ok=True)
     app.run(debug=True)
