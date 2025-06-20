@@ -3,149 +3,96 @@ import cv2
 import numpy as np
 import shutil
 
-# Create the directory structure for the target dataset (dataset2/train and dataset2/test)
-def createDirectoryStructure(baseDir):
+"""
+Image Preprocessing Module
+This module provides functions to preprocess images for tree species classification using
+a default dataset, a provided image path (individual processing) or folder path (bulk processing).
+"""
+
+# Create a default dataset with training and test images
+def processDefaultDataset():
     
-    print("\nCreating directories for dataset...\n")
+    print(f"\n{'='*60}" + "\n\tDefault image processing mode selected!\n" + "="*60 + "\n")
 
-    # If the base directory already exists, delete it to start fresh
-    if os.path.exists(baseDir):
-        print(f"\tDirectory '{baseDir}' already exists. Removing it...")
-        shutil.rmtree(baseDir)
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    sourceDataset = os.path.join(baseDir, "dataset")
+    destinationDataset = os.path.join(baseDir, "dataset2")
 
-    # Create base directory and subdirectories for train and test
+    outputDir = auxCreateOutputDirectory(os.path.join(baseDir, "outputPreprocess"))
+
+    # Reset base directory and subdirectories
+    auxResetDirectory(destinationDataset)
     for subDir in ['train', 'test']:
-        targetPath = os.path.join(baseDir, subDir)
-        os.makedirs(targetPath, exist_ok=True)
-        print(f"\tCreated directory: {targetPath}")
-    
-    print("\nDirectories successfully created!\n")
+        auxResetDirectory(os.path.join(destinationDataset, subDir))
 
-# Copy all class subfolders from the source dataset into the destination folder
-def copyClassDirectories(sourceDir, destinationDir):
-
-    print("\nCopying directories ...\n")
-
-    for className in os.listdir(sourceDir):
-        sourceClassDir = os.path.join(sourceDir, className)
-        destinationClassDir = os.path.join(destinationDir, className)
+    # Copy and process default dataset images
+    for subDir, pixelateOnly in [('train', False), ('test', True)]:
         
-        # Only copy if it's a directory
-        if os.path.isdir(sourceClassDir):
-            shutil.copytree(sourceClassDir, destinationClassDir, dirs_exist_ok=True)
-            print(f"\tCopied directory: {sourceClassDir} -> {destinationClassDir}")
+        print(f"Preprocessing {subDir} images...")
 
-    print("\nFinished copying directories!\n")
+        targetDir = os.path.join(destinationDataset, subDir)
+        
+        auxCopyDefaultDatasetFolders(sourceDataset, targetDir)
 
-# Process all images in the given folder:
-# - In 'train': keep only the resized version
-# - In 'test': keep only the pixelated version
-def processImagesToCreateDataset(folderPath, pixelateOnly=False):
+        mode = 'pixelate' if pixelateOnly else 'resize'
+        auxProcessDefaultImages(targetDir, mode)
+
+    print("\nDefault preprocessing completed!\n" + f"\n{'='*60}")
+
+# Process a single image in the provided path
+def processImage(imagePath):
     
-    print(f"\nProcessing and deleting original images in {folderPath} ...\n")
+    print(f"\n{'='*60}" + "\n\tIndividual image processing mode selected!\n" + "="*60 +
+        f"\n\nProvided path: \n\t{imagePath}\n")
+
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    outputDir = auxCreateOutputDirectory(os.path.join(baseDir, "outputPreprocess"))
+    outputPath = auxProcessSingleImage(imagePath, outputDir, mode='pixelate')
     
-    for root, _, files in os.walk(folderPath):
-        for fileName in files:
-            if fileName.lower().endswith(('.jpg', '.jpeg', '.png')):
-                inputPath = os.path.join(root, fileName)
+    print("Individual preprocessing completed!\n" + f"\n{'='*60} \n")
 
-                try:
-                    # Load the image
-                    image = loadImage(inputPath)
-
-                    # Apply filters
-                    resizedImage = resizeImage(image)
-                    blurredImage = blurImage(resizedImage)  # Optional, not saved
-                    pixelatedImage = pixelateImage(resizedImage)
-
-                    # Get file name and extension
-                    nameOnly, extension = os.path.splitext(fileName)
-
-                    # Determine output path based on mode
-                    if not pixelateOnly:
-                        outputPath = os.path.join(root, f"{nameOnly}_resized{extension}")
-                        cv2.imwrite(outputPath, resizedImage)
-                    else:
-                        outputPath = os.path.join(root, f"{nameOnly}_pixelate{extension}")
-                        cv2.imwrite(outputPath, pixelatedImage)
-
-                    # Delete the original image
-                    os.remove(inputPath)
-
-                    print(f"\t{inputPath}")
-
-                except Exception as error:
-                    print(f"Error processing {inputPath}: {error}")
+# Process all images in the provided folder
+def processFolder(folderPath):
     
-    print(f"\nFinished processing and deleting original images in {folderPath}!\n")
-    print("=========================================================\n")
+    print(f"\n{'='*60}" + "\n\tBulk image processing mode selected!\n" + "="*60 +
+          f"\n\nProvided folder: \n\t{folderPath}\n")
 
-# Main function to create the dataset
-def createDataset():
-    # Define source and destination dataset paths
-    sourceDataset = "dataset"
-    destinationDataset = "dataset2"
+    validExtensions = ('.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp')
+    imageFiles = [f for f in os.listdir(folderPath) if f.lower().endswith(validExtensions)]
 
-    # Step 1: Create directory structure for destination dataset (train/test)
-    createDirectoryStructure(destinationDataset)
+    if not imageFiles:
+        print("No valid images found in the folder.")
+        return
 
-    # Step 2: Copy all class folders from source to destination/train
-    copyClassDirectories(
-        sourceDir=sourceDataset,
-        destinationDir=os.path.join(destinationDataset, "train")
-    )
+    baseDir = os.path.dirname(os.path.abspath(__file__))
+    outputDir = auxCreateOutputDirectory(os.path.join(baseDir, "outputPreprocess"))
 
-    # Step 3: Process images in dataset2/train (keep only resized images)
-    processImagesToCreateDataset(
-        folderPath=os.path.join(destinationDataset, "train"),
-        pixelateOnly=False
-    )
+    print("Input images saved to:")
+    for fileName in imageFiles:
+        try:
+            inputPath = os.path.join(folderPath, fileName)
+            outputPath = auxProcessSingleImage(inputPath, outputDir, mode='pixelate')
+            print(f"\t{outputPath}")
+        except Exception as e:
+            print(f"Error processing {fileName}: {e}")
 
-    # Step 4: Copy all class folders from source to destination/test
-    copyClassDirectories(
-        sourceDir=sourceDataset,
-        destinationDir=os.path.join(destinationDataset, "test")
-    )
+    print("\nBulk preprocessing completed!\n" + f"\n{'='*60} \n")
 
-    # Step 5: Process images in dataset2/test (keep only pixelated images)
-    processImagesToCreateDataset(
-        folderPath=os.path.join(destinationDataset, "test"),
-        pixelateOnly=True
-    )
+"""
+Auxiliary functions for preprocessing tasks such as loading, resizing, blurring, pixelating, etc.
+"""
 
-# Process a single image 
-# - Resize, pixelate and save the image
-def processIndividualImage(imagePath):
+# Auxiliary function to create the output directory if it doesn't exist
+def auxCreateOutputDirectory(outputDir):
 
-    print("\n*** Individual image processing mode selected! ***" +
-        f"\n\nProvided path: {imagePath}\n")
-                
-    # Load the image
-    image = loadImage(imagePath)
-
-    # Apply filters
-    resizedImage = resizeImage(image)
-    pixelatedImage = pixelateImage(resizedImage)
-
-    # Prepare output directory
-    outputDir = "outputPreprocess"
-    
     if os.path.exists(outputDir):
         shutil.rmtree(outputDir)
-
+    
     os.makedirs(outputDir, exist_ok=True)
+    return outputDir
 
-    # Construct output file path
-    filename, ext = os.path.splitext(os.path.basename(imagePath))
-    outputPath = os.path.join(outputDir, f"{filename}_pixelate{ext}")
-
-    # Save the pixelated image
-    cv2.imwrite(outputPath, pixelatedImage)
-    print(f"Input image saved to: {outputPath}\n")
-
-# Load an image from the given path
-def loadImage(imagePath):
-
+# Auxiliary function to load an image from the given path
+def auxLoadImage(imagePath):
     validExtensions = ('.jpg', '.jpeg', '.png', '.bmp', '.tiff', '.webp')
 
     # Check if file extension is valid
@@ -154,26 +101,88 @@ def loadImage(imagePath):
         exit(1)
 
     image = cv2.imread(imagePath)
-
     if image is None:
-        print(f"*** Error: Image not found or unreadable in {imagePath} ***\n")
+        print(f"*** Error: Could not load image from {imagePath} ***")
+        exit(1)
 
     return image
 
-# Resize the given image to a fixed size
-def resizeImage(image, size=(228, 228), interpolation=cv2.INTER_AREA):
+# Auxiliary function to resize the given image to a fixed size
+def auxResizeImage(image, size=(228, 228), interpolation=cv2.INTER_AREA):
     return cv2.resize(image, size, interpolation=interpolation)
 
-# Apply Gaussian blur to the given image
-def blurImage(image, kernel=(5, 5)):
+# Auxiliary function to apply Gaussian blur to the given image
+def auxBlurImage(image, kernel=(5, 5)):
     return cv2.GaussianBlur(image, kernel, 0)
 
-# Apply pixelation effect to the given image
-def pixelateImage(image, pixelSize=3):
+# Auxiliary function to apply pixelation effect to the given image
+def auxPixelateImage(image, pixelSize=3):
     height, width = image.shape[:2]
-    
-    # Shrink image
     temp = cv2.resize(image, (width // pixelSize, height // pixelSize), interpolation=cv2.INTER_LINEAR)
-    
-    # Resize back to original size using nearest neighbor (blocky effect)
     return cv2.resize(temp, (width, height), interpolation=cv2.INTER_NEAREST)
+
+# Auxiliary function to process a single image and save it to the output directory
+def auxProcessSingleImage(inputPath, outputDir, mode='pixelate'):
+    image = auxLoadImage(inputPath)
+    resized = auxResizeImage(image)
+    
+    # Get the name of the class from the parent folder of the image
+    class_name = os.path.basename(os.path.dirname(inputPath)).split(" (")[0]
+
+    if mode == 'resize':
+        output = resized
+        suffix = '_resized'
+    elif mode == 'pixelate':
+        output = auxPixelateImage(resized)
+        suffix = '_' + class_name if (class_name != "uploads") else ''
+    else:
+        raise ValueError("Unsupported mode")
+
+    # Get file name and extension to save the output image
+    name, ext = os.path.splitext(os.path.basename(inputPath))
+    outputPath = os.path.join(outputDir, f"{name}{suffix}{ext}")
+    cv2.imwrite(outputPath, output)
+
+    if suffix != '_resized':
+        baseDir = os.path.dirname(os.path.abspath(__file__))
+        outputPathPreprocess = os.path.join(baseDir, "outputPreprocess", f"{name}{suffix}{ext}")
+        cv2.imwrite(outputPathPreprocess, output)
+    
+    return outputPath
+
+# Auxiliary function to reset directories
+def auxResetDirectory(path):
+    
+    if os.path.exists(path):
+        shutil.rmtree(path)
+    
+    os.makedirs(path, exist_ok=True)
+
+# Auxiliary function to copy default dataset folders
+def auxCopyDefaultDatasetFolders(src, dst):
+    
+    for className in os.listdir(src):
+    
+        srcClass = os.path.join(src, className)
+        dstClass = os.path.join(dst, className)
+    
+        if os.path.isdir(srcClass):
+            shutil.copytree(srcClass, dstClass, dirs_exist_ok=True)
+
+# Auxiliary function to process images in a folder
+def auxProcessDefaultImages(folder, mode):
+    
+    for root, _, files in os.walk(folder):
+        
+        for fileName in files:
+            
+            if fileName.lower().endswith(('.jpg', '.jpeg', '.png')):
+                
+                inputPath = os.path.join(root, fileName)
+                
+                try:
+                    auxProcessSingleImage(inputPath, root, mode)
+                    os.remove(inputPath)
+                
+                except Exception as error:
+                    print(f"Error processing {inputPath}: {error}")

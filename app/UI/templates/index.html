@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <title>Tree Species Classification</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous" />
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/styles.css') }}" />
+</head>
+
+<body>
+
+    <!-- NAVBAR -->
+    <header class="p-3 text-bg-dark">
+        <div class="container-fluid">
+            <div class="d-flex justify-content-between align-items-center">
+                <a href="/" class="d-flex align-items-center text-white text-decoration-none">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-tree" viewBox="0 0 16 16">
+                        <path d="M8.416.223a.5.5 0 0 0-.832 0l-3 4.5A.5.5 0 0 0 5 5.5h.098L3.076 8.735A.5.5 0 0 0 3.5 9.5h.191l-1.638 3.276a.5.5 0 0 0 .447.724H7V16h2v-2.5h4.5a.5.5 0 0 0 .447-.724L12.31 9.5h.191a.5.5 0 0 0 .424-.765L10.902 5.5H11a.5.5 0 0 0 .416-.777zM6.437 4.758A.5.5 0 0 0 6 4.5h-.066L8 1.401 10.066 4.5H10a.5.5 0 0 0-.424.765L11.598 8.5H11.5a.5.5 0 0 0-.447.724L12.69 12.5H3.309l1.638-3.276A.5.5 0 0 0 4.5 8.5h-.098l2.022-3.235a.5.5 0 0 0 .013-.507"/>
+                    </svg>
+                </a>
+
+                <ul class="nav nav-tabs custom-tabs" role="tablist">
+                    <li class="nav-item mx-2" role="presentation">
+                        <a class="nav-link active" id="tab-home" data-bs-toggle="tab" href="#home" role="tab"
+                            aria-controls="home" aria-selected="true">Home</a>
+                    </li>
+                    <li class="nav-item mx-2" role="presentation">
+                        <a class="nav-link" id="tab-analysis" data-bs-toggle="tab" href="#classify" role="tab"
+                            aria-controls="classify" aria-selected="false">Analysis</a>
+                    </li>
+                    <li class="nav-item ms-2" role="presentation">
+                        <a class="nav-link" id="tab-about" data-bs-toggle="tab" href="#about" role="tab"
+                            aria-controls="about" aria-selected="false">About</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTENT -->
+    <div class="d-flex justify-content-center align-items-center">
+        <div class="tab-content" id="mainContent">
+
+            <!-- HOME TAB -->
+            <div class="tab-pane fade show active" id="home">
+                
+                <div class="container-fluid px-0">
+                    <div class="main-section text-white d-flex align-items-center">
+                        <div class="container py-5">
+                            <div class="col-lg-6 bg-opacity-75 p-5 rounded-3 d-flex flex-column align-items-center">
+                                <h1 class="display-5 mb-3">Tree Species Classifier</h1>
+                                <p class="fs-5 text-light">Turn a photo into knowledge!</p>
+                                <div class="d-flex gap-2 mt-4">
+                                    <button id="getStartedBtn" class="btn btn-primary btn-lg px-4 rounded-pill" type="button">
+                                        Get started!
+                                    </button>
+                                    <button id="learnMoreBtn" class="btn btn-outline-light btn-lg px-4 rounded-pill" type="button">
+                                        Learn more
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FEATURES SECTION -->
+                <div class="d-flex flex-column justify-content-center align-items-center px-4 py-3 features-section text-light">
+                    <h2 class="fs-1 pb-2 border-bottom">Features</h2>
+                    <div class="row py-5 row-cols-1 row-cols-lg-3 d-flex justify-content-between">
+
+                        <!-- FEATURE ITEM -->
+                        <div class="d-flex align-items-start feature">
+                            <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 mt-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
+                                    <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                                    <path d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="fs-2">Individual processing</h3>
+                                <p>Upload a single photo to predict the species one image at a time</p>
+                            </div>
+                        </div>
+
+                        <!-- FEATURE ITEM -->
+                        <div class="d-flex align-items-start feature">
+                            <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 mt-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor"
+                                    class="bi bi-file-earmark-zip-fill" viewBox="0 0 16 16">
+                                    <path
+                                        d="M5.5 9.438V8.5h1v.938a1 1 0 0 0 .03.243l.4 1.598-.93.62-.93-.62.4-1.598a1 1 0 0 0 .03-.243" />
+                                    <path
+                                        d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-4-.5V2h-1V1H6v1h1v1H6v1h1v1H6v1h1v1H5.5V6h-1V5h1V4h-1V3zm0 4.5h1a1 1 0 0 1 1 1v.938l.4 1.599a1 1 0 0 1-.416 1.074l-.93.62a1 1 0 0 1-1.109 0l-.93-.62a1 1 0 0 1-.415-1.074l.4-1.599V8.5a1 1 0 0 1 1-1" />
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="fs-2">In-bulk processing</h3>
+                                <p>Upload a zip file to bulk predict the species automatically</p>
+                            </div>
+                        </div>
+
+                        <!-- FEATURE ITEM -->
+                        <div class="d-flex align-items-start feature">
+                            <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 mt-2">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+                                    <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                                    <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
+                                </svg>
+                            </div>
+                            <div>
+                                <h3 class="fs-2">Default processing</h3>
+                                <p>Predict tree species by using the default dataset provided</p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- FOOTER -->
+                    <footer class="bg-dark text-white p-4">
+                        <div class="d-flex justify-content-between align-items-center">
+                            {% set current_year = current_year or 2023 %}
+                            <p class="mb-1">© {{ current_year }} - Tree Species Classification System</p>
+                            <a href="https://github.com/04esteban04/treeRecognition/tree/main" class="text-white" target="_blank" aria-label="GitHub project">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="30" height="30" fill="currentColor" class="bi bi-github" viewBox="0 0 16 16">
+                                    <path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27s1.36.09 2 .27c1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.01 8.01 0 0 0 16 8c0-4.42-3.58-8-8-8"/>
+                                </svg>
+                            </a>
+                        </div>
+                    </footer>
+
+                </div>
+            </div>
+
+            <!-- ANALYSIS TAB -->
+            <div class="tab-pane fade" id="classify">
+
+                <!-- Processing modes -->
+                <div class="d-flex flex-column justify-content-center align-items-center analysis-section">
+
+                    <!-- Mode selector -->
+                    <div class="d-flex flex-column justify-content-center align-items-center px-4 py-3 text-light">
+                        
+                        <h2 class="fs-1 mb-5 pb-2">Select the desired processing mode</h2>
+                        <div class="row py-5 row-cols-1 row-cols-lg-3 d-flex justify-content-between">
+
+                            <div id="Individual" class="d-flex align-items-start feature">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <button type="button" class="btn btn-outline-light btn-lg rounded-pill mx-3 mb-3 px-4 fs-4" id="button-individual">
+                                        <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 mt-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-image" viewBox="0 0 16 16">
+                                                <path d="M6.502 7a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                                                <path d="M14 14a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V2a2 2 0 0 1 2-2h5.5L14 4.5zM4 1a1 1 0 0 0-1 1v10l2.224-2.224a.5.5 0 0 1 .61-.075L8 11l2.157-3.02a.5.5 0 0 1 .76-.063L13 10V4.5h-2A1.5 1.5 0 0 1 9.5 3V1z"/>
+                                            </svg>
+                                        </div>
+                                        Individual
+                                    </button>
+                                    <p>Upload a single photo to predict the species of the image provided</p>
+                                </div>
+                            </div>
+
+                            <div id="In-bulk" class="d-flex align-items-start feature">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <button type="button" class="btn btn-outline-light btn-lg rounded-pill mx-3 mb-3 px-4 fs-4" id="button-bulk">
+                                        <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 mt-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-file-earmark-zip-fill" viewBox="0 0 16 16">
+                                                <path d="M5.5 9.438V8.5h1v.938a1 1 0 0 0 .03.243l.4 1.598-.93.62-.93-.62.4-1.598a1 1 0 0 0 .03-.243" />
+                                                <path d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1m-4-.5V2h-1V1H6v1h1v1H6v1h1v1H6v1h1v1H5.5V6h-1V5h1V4h-1V3zm0 4.5h1a1 1 0 0 1 1 1v.938l.4 1.599a1 1 0 0 1-.416 1.074l-.93.62a1 1 0 0 1-1.109 0l-.93-.62a1 1 0 0 1-.415-1.074l.4-1.599V8.5a1 1 0 0 1 1-1" />
+                                            </svg>
+                                        </div>
+                                        In-bulk
+                                    </button>
+                                    <p>Upload a zip file to bulk predict the species automatically</p>
+                                </div>
+                            </div>
+
+                            <div id="Default" class="d-flex align-items-start feature">
+                                <div class="d-flex flex-column justify-content-center align-items-center">
+                                    <button type="button" class="btn btn-outline-light btn-lg rounded-pill mx-3 mb-3 px-4 fs-4" id="button-default">
+                                        <div class="icon-square d-inline-flex align-items-center justify-content-center fs-4 flex-shrink-0 me-3 mt-2">
+                                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-images" viewBox="0 0 16 16">
+                                                <path d="M4.502 9a1.5 1.5 0 1 0 0-3 1.5 1.5 0 0 0 0 3"/>
+                                                <path d="M14.002 13a2 2 0 0 1-2 2h-10a2 2 0 0 1-2-2V5A2 2 0 0 1 2 3a2 2 0 0 1 2-2h10a2 2 0 0 1 2 2v8a2 2 0 0 1-1.998 2M14 2H4a1 1 0 0 0-1 1h9.002a2 2 0 0 1 2 2v7A1 1 0 0 0 15 11V3a1 1 0 0 0-1-1M2.002 4a1 1 0 0 0-1 1v8l2.646-2.354a.5.5 0 0 1 .63-.062l2.66 1.773 3.71-3.71a.5.5 0 0 1 .577-.094l1.777 1.947V5a1 1 0 0 0-1-1z"/>
+                                            </svg>
+                                        </div>
+                                        Default
+                                    </button>
+                                    <p>Predict tree species by using the default dataset provided</p>
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- File upload form -->
+                    <div id="fileUploadFormIndividual" class="d-none upload-form-card">
+                        
+                        <form enctype="multipart/form-data" class="d-flex flex-column align-items-center">
+                            <div class="custom-file-input-wrapper">
+                                <input type="file" name="file" id="file" class="d-none" accept=".jpg,.jpeg,.png,.bmp,.tiff,.webp" required />
+                                <span id="fileName" class="file-name">No file chosen</span>
+                            </div>
+                            
+                            <div class="d-flex flex-row align-items-center mt-3">
+                                <button type="button" id="uploadFileBtn" class="btn file-select-btn">Choose File</button>
+                                
+                                <button type="submit" class="btn submit-btn ms-3">
+                                    <span class="btn-text">Process</span>
+                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                    <span class="check-icon d-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+                        
+                    <!-- ZIP file upload form -->
+                    <div id="fileUploadFormBulk" class="d-none upload-form-card">
+                        
+                        <form enctype="multipart/form-data" class="d-flex flex-column align-items-center">
+                            <div class="custom-file-input-wrapper">
+                                <input type="file" name="file" id="file" class="d-none" accept=".zip" required />
+                                <span id="bulkFileName" class="file-name">No file chosen</span>
+                            </div>
+                            
+                            <div class="d-flex flex-row align-items-center mt-3">
+                                <button type="button" id="uploadBulkBtn" class="btn file-select-btn">Choose ZIP</button>
+                                
+                                <button type="submit" class="btn submit-btn ms-3">
+                                    <span class="btn-text">Process</span>
+                                    <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                                    <span class="check-icon d-none">
+                                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                            <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                        </svg>
+                                    </span>
+                                </button>
+                            </div>
+                        </form>
+
+                    </div>
+
+                    <!-- Default processing button -->
+                    <div id="processDefaultBtnWrapper" class="text-center d-none upload-form-card">
+
+                        <button id="processDefaultDatasetBtn" class="btn submit-btn">
+                            <span class="btn-text">Process default dataset</span>
+                            <span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+                            <span class="check-icon d-none">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-check-circle-fill" viewBox="0 0 16 16">
+                                    <path d="M16 8A8 8 0 1 1 0 8a8 8 0 0 1 16 0m-3.97-3.03a.75.75 0 0 0-1.08.022L7.477 9.417 5.384 7.323a.75.75 0 0 0-1.06 1.06L6.97 11.03a.75.75 0 0 0 1.079-.02l3.992-4.99a.75.75 0 0 0-.01-1.05z"/>
+                                </svg>
+                            </span>
+                        </button>
+
+                    </div>
+
+                    <!-- Message box -->
+                    <div id="message" class="alert mt-4 d-none"></div>
+                </div>
+
+                <!-- Results -->
+                <div id="results" class="d-flex flex-column justify-content-start analysis-results-section d-none">
+                    
+                    <!-- Results Navbar -->
+                    <div class="d-flex justify-content-between align-items-center text-bg-dark text-white w-100 p-3 sticky-top">
+                        <h3 id="toggleResultTitle" class="d-flex justify-content-center align-items-center">Prediction results</h3>
+                        <div class="d-grid gap-0 column-gap-3" style="grid-template-columns: 1fr 1fr;" >
+                            
+                            <button id="toggleViewBtn" class="btn btn-primary rounded-pill">Toggle table view</button>
+                            
+                            <form action="{{ url_for('export_pdf') }}" method="get">
+                                <button type="submit" class="btn btn-secondary rounded-pill">Export Data</button>
+                            </form>
+                        
+                        </div>
+                    </div>
+
+                    <!-- Results Table -->
+                    <div id="resultTableContainer" class="my-5 container d-none">
+                        <div class="table-responsive">
+                            <table class="table table-bordered table-striped table-hover table-dark text-light align-middle text-center ">
+                                <thead class="table-dark text-light">
+                                    <tr>
+                                        <th>#</th>
+                                        <th>Image</th>
+                                        <th>Real Value</th>
+                                        <th>Predicted Value</th>
+                                        <th>Accuracy (%)</th>
+                                        <th>Is Correct?</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="resultTableBody" class="table-group-divider">
+                                    <!-- Rows will be inserted here -->
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <!-- Results Card Grid -->
+                    <div id="resultCardContainer" class="my-5 container d-none">
+                        <div id="resultCardGrid" class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+                            <!-- Cards will be injected here -->
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- ABOUT TAB -->
+            <div class="tab-pane fade" id="about">
+                <div class="container mt-5 py-5 px-4 text-light text-center">
+                    <h1 class="mt-4 display-5">🌲 Tree Species Recognition System</h1>
+                    <p class="lead mb-5">
+                        A neural network-based application for identifying tree species from aerial and ground-level images, supporting environmental monitoring and conservation efforts.
+                    </p>
+
+                    <div class="row row-cols-1 row-cols-md-2 g-5 justify-content-center text-start">
+                        
+                        <!-- Features -->
+                        <div class="col">
+                            <div class="card about-card">
+                            <h3 class="mb-3">🔍 Key Features</h3>
+                            <ul class="list-unstyled">
+                                <li>✅ Automated preprocessing (resize, normalize, pixelate)</li>
+                                <li>✅ Deep learning classifier based on ResNet18</li>
+                                <li>✅ Real-time UI and command-line interface</li>
+                                <li>✅ Bulk and individual image analysis</li>
+                                <li>✅ PDF report generation with model metrics</li>
+                                <li>✅ Optimized for ecological and forestry research</li>
+                            </ul>
+                            </div>
+                        </div>
+
+                        <!-- Use Cases -->
+                        <div class="col">
+                            <div class="card about-card">
+                            <h3 class="mb-3">📌 Use Cases</h3>
+                            <ul class="list-unstyled">
+                                <li>🌿 Ecological monitoring</li>
+                                <li>🌲 Forestry management</li>
+                                <li>🧬 Biodiversity research</li>
+                                <li>🌎 Environmental impact analysis</li>
+                            </ul>
+                            </div>
+                        </div>
+
+                        <!-- How to Use -->
+                        <div class="col">
+                            <div class="card about-card">
+                                <h3 class="mb-3">🧭 How to use it</h3>
+                                <ol>
+                                    <li> Navigate to the analysis page</li>
+                                    <li> Select the desired mode (individual, bulk, or default)</li>
+                                    <li> Upload your images or use the default set</li>
+                                    <li> View results in card/table format</li>
+                                    <li> Download a PDF report if desired</li>
+                                </ol>
+
+                                <!-- Note -->
+                                <div class="alert alert-info mt-2 text-start shadow-lg rounded-4">
+                                    <strong>Note:</strong> For individual or bulk processing, the uploaded files must follow the format:
+                                    <code>&lt;name&gt;_&lt;treeSpecies&gt;.&lt;file_extension&gt;</code><br><br>
+                                    For example: <code>img9_oak.jpg</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- How to run locally-->
+                        <div class="col">
+                            <div class="card about-card">
+                                <h3 class="mb-3">🚀 How to run the app locally</h3>
+                                <ul class="list">
+                                    <li>
+                                        <p>Navigate to the <code>app</code> folder and run:</p>
+                                        <pre class="bg-secondary p-3 rounded-3"><code>python app.py</code></pre>
+                                        <p>This launches the backend, frontend, and handles classification and reporting.</p>
+                                    </li>
+                                    <li>
+                                        <p>Open <code>localhost:5000</code></p>
+                                    </li>
+                            </div>
+                        </div>
+                        
+                        <!-- Technologies Table -->
+                        <div class="col w-100">
+                            <div class="card about-card">
+                                <h3 class="mb-4 text-center">🧪 Technologies Used</h3>
+                                <div class="table-responsive text-center">
+                                    <table class="table table-dark table-striped table-borderless table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Category</th>
+                                                <th scope="col">Technologies</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="table-group-divider">
+                                                <td><strong>Frontend</strong></td>
+                                                <td>Flask, HTML/CSS, JS</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Image Processing</strong></td>
+                                                <td>OpenCV, NumPy</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Model Training</strong></td>
+                                                <td>PyTorch, torchvision</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Reporting</strong></td>
+                                                <td>ReportLab, Pandas</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Evaluation</strong></td>
+                                                <td>scikit-learn, Matplotlib</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+</body>
+
+</html>
