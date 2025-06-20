@@ -284,8 +284,8 @@
                     <!-- Results Table -->
                     <div id="resultTableContainer" class="my-5 container d-none">
                         <div class="table-responsive">
-                            <table class="table table-bordered table-striped table-hover align-middle text-center">
-                                <thead class="table-light">
+                            <table class="table table-bordered table-striped table-hover table-dark text-light align-middle text-center ">
+                                <thead class="table-dark text-light">
                                     <tr>
                                         <th>#</th>
                                         <th>Image</th>
@@ -314,8 +314,120 @@
 
             <!-- ABOUT TAB -->
             <div class="tab-pane fade" id="about">
-                <h1 class="text-center mb-4">About</h1>
-                <p>This is where information about the system goes.</p>
+                <div class="container mt-5 py-5 px-4 text-light text-center">
+                    <h1 class="mt-4 display-5">🌲 Tree Species Recognition System</h1>
+                    <p class="lead mb-5">
+                        A neural network-based application for identifying tree species from aerial and ground-level images, supporting environmental monitoring and conservation efforts.
+                    </p>
+
+                    <div class="row row-cols-1 row-cols-md-2 g-5 justify-content-center text-start">
+                        
+                        <!-- Features -->
+                        <div class="col">
+                            <div class="card about-card">
+                            <h3 class="mb-3">🔍 Key Features</h3>
+                            <ul class="list-unstyled">
+                                <li>✅ Automated preprocessing (resize, normalize, pixelate)</li>
+                                <li>✅ Deep learning classifier based on ResNet18</li>
+                                <li>✅ Real-time UI and command-line interface</li>
+                                <li>✅ Bulk and individual image analysis</li>
+                                <li>✅ PDF report generation with model metrics</li>
+                                <li>✅ Optimized for ecological and forestry research</li>
+                            </ul>
+                            </div>
+                        </div>
+
+                        <!-- Use Cases -->
+                        <div class="col">
+                            <div class="card about-card">
+                            <h3 class="mb-3">📌 Use Cases</h3>
+                            <ul class="list-unstyled">
+                                <li>🌿 Ecological monitoring</li>
+                                <li>🌲 Forestry management</li>
+                                <li>🧬 Biodiversity research</li>
+                                <li>🌎 Environmental impact analysis</li>
+                            </ul>
+                            </div>
+                        </div>
+
+                        <!-- How to Use -->
+                        <div class="col">
+                            <div class="card about-card">
+                                <h3 class="mb-3">🧭 How to use it</h3>
+                                <ol>
+                                    <li> Navigate to the analysis page</li>
+                                    <li> Select the desired mode (individual, bulk, or default)</li>
+                                    <li> Upload your images or use the default set</li>
+                                    <li> View results in card/table format</li>
+                                    <li> Download a PDF report if desired</li>
+                                </ol>
+
+                                <!-- Note -->
+                                <div class="alert alert-info mt-2 text-start shadow-lg rounded-4">
+                                    <strong>Note:</strong> For individual or bulk processing, the uploaded files must follow the format:
+                                    <code>&lt;name&gt;_&lt;treeSpecies&gt;.&lt;file_extension&gt;</code><br><br>
+                                    For example: <code>img9_oak.jpg</code>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- How to run locally-->
+                        <div class="col">
+                            <div class="card about-card">
+                                <h3 class="mb-3">🚀 How to run the app locally</h3>
+                                <ul class="list">
+                                    <li>
+                                        <p>Navigate to the <code>app</code> folder and run:</p>
+                                        <pre class="bg-secondary p-3 rounded-3"><code>python app.py</code></pre>
+                                        <p>This launches the backend, frontend, and handles classification and reporting.</p>
+                                    </li>
+                                    <li>
+                                        <p>Open <code>localhost:5000</code></p>
+                                    </li>
+                            </div>
+                        </div>
+                        
+                        <!-- Technologies Table -->
+                        <div class="col w-100">
+                            <div class="card about-card">
+                                <h3 class="mb-4 text-center">🧪 Technologies Used</h3>
+                                <div class="table-responsive text-center">
+                                    <table class="table table-dark table-striped table-borderless table-hover mb-0">
+                                        <thead>
+                                            <tr>
+                                                <th scope="col">Category</th>
+                                                <th scope="col">Technologies</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr class="table-group-divider">
+                                                <td><strong>Frontend</strong></td>
+                                                <td>Flask, HTML/CSS, JS</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Image Processing</strong></td>
+                                                <td>OpenCV, NumPy</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Model Training</strong></td>
+                                                <td>PyTorch, torchvision</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Reporting</strong></td>
+                                                <td>ReportLab, Pandas</td>
+                                            </tr>
+                                            <tr>
+                                                <td><strong>Evaluation</strong></td>
+                                                <td>scikit-learn, Matplotlib</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
             </div>
 
         </div>

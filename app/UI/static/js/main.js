@@ -194,12 +194,12 @@ document.addEventListener("DOMContentLoaded", () => {
 							col.classList.add("col");
 
 							col.innerHTML = `
-								<div class="card h-100 shadow-sm">
+								<div class="card about-card h-100 shadow-sm">
 									<img src="/preprocessed_images/${item["Image name"]}" class="card-img-top mt-2" alt="${item["Image name"]}" style="height: 200px; width: 100%; object-fit: contain;">
-									<div class="card-body text-center">
+									<div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
 										<h5 class="card-title mb-2">File: ${item["Image name"]}</h5>
 										<hr>
-										<table class="table table-sm">
+										<table class="table table-bordered table-striped table-dark text-light table-hover">
 											<tbody>
 												<tr>
 													<th scope="row">Real class:</th>
@@ -343,12 +343,12 @@ document.addEventListener("DOMContentLoaded", () => {
 						col.classList.add("col");
 
 						col.innerHTML = `
-							<div class="card h-100 shadow-sm card-image-wrapper">
+							<div class="card about-card h-100 shadow-sm card-image-wrapper">
 								<img src="/preprocessed_images/${item["Image name"]}" class="card-img-top mt-2 card-image" alt="${item["Image name"]}">
-								<div class="card-body text-center">
+								<div class="card-body text-center d-flex flex-column justify-content-center align-items-center">
 									<h5 class="card-title mb-2">File: ${item["Image name"]}</h5>
 									<hr>
-									<table class="table table-sm">
+									<table class="table table-bordered table-striped table-dark text-light table-hover">
 										<tbody>
 											<tr>
 												<th scope="row">Real class:</th>
